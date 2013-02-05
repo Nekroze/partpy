@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-4.6.dtd">
+<!-- eric4 project file for project partpy -->
+<!-- Saved: 2013-02-05, 16:13:41 -->
+<!-- Copyright (C) 2013 Taylor "Nekroze" Embrace, nekroze@eturnilnetwork.com -->
+<Project version="4.6">
+  <Language></Language>
+  <ProgLanguage mixed="0">Python</ProgLanguage>
+  <ProjectType>Console</ProjectType>
+  <Description>Parser Tools in Python (partpy, pronounced Par-Tee-Pie), a collection of tools for hand writing lexers and parsers in python. </Description>
+  <Version>0.1.0</Version>
+  <Author>Taylor "Nekroze" Embrace</Author>
+  <Email>nekroze@eturnilnetwork.com</Email>
+  <Sources>
+    <Source>partpy/__init__.py</Source>
+    <Source>partpy/sourcestring.py</Source>
+    <Source>test/test_sourcestring.py</Source>
+    <Source>test/template.py</Source>
+    <Source>setup.py</Source>
+    <Source>__init__.py</Source>
+  </Sources>
+  <Forms>
+  </Forms>
+  <Translations>
+  </Translations>
+  <Resources>
+  </Resources>
+  <Interfaces>
+  </Interfaces>
+  <Others>
+  </Others>
+  <Vcs>
+    <VcsType>None</VcsType>
+  </Vcs>
+  <FiletypeAssociations>
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES" />
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES" />
+    <FiletypeAssociation pattern="*.py" type="SOURCES" />
+    <FiletypeAssociation pattern="*.ptl" type="SOURCES" />
+  </FiletypeAssociations>
+</Project>

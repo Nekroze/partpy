@@ -1,7 +1,7 @@
 partpy
 ------
 
-Parser Tools in Python (``partpy``, pronounced ``Par-Tee-Pie``, a
+Parser Tools in Python (``partpy``, pronounced ``Par-Tee-Pie``), a
 collection of tools for hand writing lexers and parsers in python.
 
 There are many parser generators but there isn't much help for those

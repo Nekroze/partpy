@@ -42,8 +42,8 @@ class SourceString(object):
         self.eos = False
 
     def has_space(self, length = 1):
-        """Returns boolean if self.pos + length <= working string length."""
-        return self.pos + length-1 <= self.length
+        """Returns boolean if self.pos + length < working string length."""
+        return self.pos + length-1 < self.length
 
     def eat_length(self, length):
         """Move current position by length and set eos if not has_space()."""
@@ -56,8 +56,9 @@ class SourceString(object):
     def eat_string(self, string):
         """Move current position by length of string and count lines by \n."""
         if string == '\n':  # Handle single newline.
-            self.col = 0
+            self.col = -1
             self.row += 1
+            self.eat_length(1)
         elif '\n' in string:  # Handle string containing a newline.
             for char in string:  # Recursively call eat to handle each char.
                 self.eat_string(char)
@@ -65,21 +66,29 @@ class SourceString(object):
             length = len(string)
             self.eat_length(length)  # Any other string just eat the length.
 
-    def get_current_char(self):
+    def get_char(self):
         """Return the current character in the working string."""
+        if not self.has_space():
+            return ''
+            
         return self.string[self.pos]
 
-    def get_current_length(self, length):
+    def get_length(self, length, trim = False):
         """Return string at current position + length."""
+        if not self.has_space():
+            return ''
+            
         pos = self.pos
         distance = pos + length
-        if self.has_space(distance):
-            return self.string[pos:distance]
-        else:
+        if not trim and not self.has_space(length):
             return ''
+        return self.string[pos:distance]
 
-    def get_current_string(self):
+    def get_string(self):
         """Return non space chars from current position until a whitespace."""
+        if not self.has_space():
+            return ''
+            
         pos = self.pos
         string = self.string
         # Get a char for each char in the current string from pos onward
