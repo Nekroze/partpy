@@ -32,6 +32,8 @@ nosetests.xml
 *.mo
 
 # Mr Developer
+*.e4p
+*.e5p
 .mr.developer.cfg
 .project
 .pydevproject
