@@ -1,5 +1,7 @@
 """SourceString stores the entire string to be parsed in memory and provides
 some simple methods for retrieving and moving current position."""
+__author__ = 'Taylor "Nekroze" Lawson'
+__email__ = 'nekroze@eturnilnetwork.com'
 
 from itertools import takewhile
 
