@@ -50,8 +50,8 @@ class SourceString(object):
     @cy.locals(filename = str)
     def load_file(self, filename):
         """Read in file contents and set the current string."""
-        with open(filename, 'r') as file:
-            self.set_string(file.read())
+        with open(filename, 'r') as sourcefile:
+            self.set_string(sourcefile.read())
         return self
 
     @cy.ccall
