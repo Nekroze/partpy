@@ -179,6 +179,7 @@ setup(
         'prep': Prep,
         'commit': GitCommit,
         'pypiup': PyPiUpload, 
+        'cleanup': CleanUp, 
         'build_ext': build_ext},
 
     name=PROJECTNAME,
