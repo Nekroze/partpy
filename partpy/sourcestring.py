@@ -4,25 +4,58 @@ __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
 from itertools import takewhile
+import cython as cy
 
 
+@cy.cclass
 class SourceString(object):
     """Stores the parse string and its length followed by current position
     in the string and if the end of the string has been reached.
 
     It also stores the current row and column position as manually counted.
     """
-    string = ''
-    length = 0
-    eos = False
-    pos = 0
-    col = 0
-    row = 0
+    string = cy.declare(str)
+    cy.declare(length = cy.int, 
+               pos = cy.int, row = cy.int, col = cy.int, 
+               eos = cy.int)
+    
+    def __init__(self):
+        self.string = ''
+        self.length = 0
+        self.pos = 0
+        self.col = 0
+        self.row = 0
+        self.eos = 0
+        
+    @cy.ccall
+    @cy.returns(cy.int)
+    def end(self):
+        return self.eos
+        
+    @cy.ccall
+    @cy.returns(cy.int)
+    def line(self):
+        return self.row
+        
+    @cy.ccall
+    @cy.returns(cy.int)
+    def column(self):
+        return self.col
+        
+    @cy.ccall
+    @cy.returns(cy.int)
+    def position(self):
+        return self.pos
 
+    @cy.ccall
+    @cy.locals(filename = str)
     def load_file(self, filename):
         """Read in file contents and set the current string."""
-        return self.set_string(open(filename, 'r').read())
+        self.set_string(open(filename, 'r').read())
+        return self
 
+    @cy.ccall
+    @cy.locals(string = str)
     def set_string(self, string):
         """Set the working string and its length then reset positions."""
         self.string = string
@@ -30,31 +63,41 @@ class SourceString(object):
         self.reset_position()
         return self
 
+    @cy.ccall
+    @cy.locals(string = str)
     def add_string(self, string):
         """Add to the working string and its length and reset eos."""
         self.string += string
         self.length += len(string)
-        self.eos = False
+        self.eos = 0
 
+    @cy.ccall
     def reset_position(self):
         """Reset all current positions."""
         self.pos = 0
         self.col = 0
         self.row = 0
-        self.eos = False
+        self.eos = 0
 
+    @cy.ccall
+    @cy.locals(length = cy.int)
+    @cy.returns(cy.int)
     def has_space(self, length = 1):
         """Returns boolean if self.pos + length < working string length."""
         return self.pos + length-1 < self.length
 
+    @cy.ccall
+    @cy.locals(length = cy.int)
     def eat_length(self, length):
         """Move current position by length and set eos if not has_space()."""
         self.col += length
         self.pos += length
 
         if not self.has_space():  # Set eos if there is no more space left.
-            self.eos = True
+            self.eos = 1
 
+    @cy.ccall
+    @cy.locals(string = str, length = cy.int)
     def eat_string(self, string):
         """Move current position by length of string and count lines by \n."""
         if string == '\n':  # Handle single newline.
@@ -62,12 +105,15 @@ class SourceString(object):
             self.row += 1
             self.eat_length(1)
         elif '\n' in string:  # Handle string containing a newline.
+            char = cy.declare(str)
             for char in string:  # Recursively call eat to handle each char.
                 self.eat_string(char)
         else:
             length = len(string)
             self.eat_length(length)  # Any other string just eat the length.
 
+    @cy.ccall
+    @cy.returns(str)
     def get_char(self):
         """Return the current character in the working string."""
         if not self.has_space():
@@ -75,7 +121,10 @@ class SourceString(object):
             
         return self.string[self.pos]
 
-    def get_length(self, length, trim = False):
+    @cy.ccall
+    @cy.locals(length = cy.int, trim = cy.int, pos = cy.int, distance = cy.int)
+    @cy.returns(str)
+    def get_length(self, length, trim = 0):
         """Return string at current position + length."""
         if not self.has_space():
             return ''
@@ -86,6 +135,9 @@ class SourceString(object):
             return ''
         return self.string[pos:distance]
 
+    @cy.ccall
+    @cy.locals(pos = cy.int)
+    @cy.returns(str)
     def get_string(self):
         """Return non space chars from current position until a whitespace."""
         if not self.has_space():
@@ -95,5 +147,11 @@ class SourceString(object):
         string = self.string
         # Get a char for each char in the current string from pos onward
         #  solong as the char is not whitespace.
-        gen = (y for y in takewhile(lambda x: not x.isspace(), string[pos:]))
-        return ''.join(gen)
+        #list = [y for y in takewhile(lambda x: not x.isspace(), string[pos:])]
+        list = []
+        for char in string[pos:]:
+            if char.isspace():
+                break
+            else:
+                list.append(char)
+        return ''.join(list)

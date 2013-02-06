@@ -4,7 +4,8 @@ import os
 import sys
 import platform
 from distutils.core import setup, Command
-
+from Cython.Distutils import build_ext
+import partcy
 
 __version__ = '0.1.0'
 __author__ = 'Nekroze'
@@ -17,7 +18,8 @@ PROJECTDESC = 'Parser Tools in Python, a collection of tools for hand writing le
 PROJECTLICENSE = 'MIT'
 PLATFORMS = ['*nix', 'Windows']
 
-EXTENSIONS = []  # DEFINE YOURSELF if compiled extensions are needed
+EXTENSIONS = []
+EXTENSIONS.extend(partcy.EXTENSIONS)
 
 
 PYTHON = 'python'
@@ -25,6 +27,38 @@ if platform.system() != 'Windows' and sys.version_info[0] == 3:
     PYTHON = 'python3'
 
 
+class CleanUp(Command):
+    """Cleanup all python/cython temporary or build files."""
+    description = "Cleanup all python/cython temporary or build files."
+    user_options = []
+
+    def initialize_options(self):
+        """pass."""
+        pass
+
+    def finalize_options(self):
+        """pass."""
+        pass
+
+    def run(self):
+        """Run CleanUp."""
+        import fnmatch
+        import shutil
+        matches = []
+        dirs = []
+        for root, dirnames, filenames in os.walk('.'):
+          for filename in fnmatch.filter(filenames, '*.pyc'):
+              matches.append(os.path.join(root, filename))
+          for filename in fnmatch.filter(filenames, '*.so'):
+              matches.append(os.path.join(root, filename))
+          for dirname in fnmatch.filter(dirnames, '__pycache__'):
+              dirs.append(os.path.join(root, dirname))
+              
+        for match in matches:
+            os.remove(match)
+        for dir in dirs:
+            shutil.rmtree(dir)
+            
 class Test(Command):
     """Run test suite."""
     description = "Run test suite"
@@ -144,7 +178,8 @@ setup(
         'test': Test,
         'prep': Prep,
         'commit': GitCommit,
-        'pypiup': PyPiUpload},
+        'pypiup': PyPiUpload, 
+        'build_ext': build_ext},
 
     name=PROJECTNAME,
     author=__author__,
@@ -153,6 +188,7 @@ setup(
     platforms=PLATFORMS,
     packages=[SOURCE],
     ext_modules = EXTENSIONS,
+    requires = ['cython'], 
     classifiers=[
         'Development Status :: 3 - Alpha', 
         'License :: OSI Approved :: MIT License',  
