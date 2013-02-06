@@ -44,9 +44,15 @@ class CleanUp(Command):
         """Run CleanUp."""
         import fnmatch
         import shutil
+        import glob
         matches = []
+        matches.extend(glob.glob('./*.pyc'))
+        matches.extend(glob.glob('./*.pyd'))
+        matches.extend(glob.glob('./*.pyo'))
+        matches.extend(glob.glob('./*.so'))
         dirs = []
-        for root, dirnames, filenames in os.walk('.'):
+        dirs.extend(glob.glob('./__pycache__'))
+        for root, dirnames, filenames in os.walk(SOURCE):
           for filename in fnmatch.filter(filenames, '*.pyc'):
               matches.append(os.path.join(root, filename))
           for filename in fnmatch.filter(filenames, '*.pyd'):

@@ -47,6 +47,11 @@ class SourceString(object):
         return self.pos
 
     @cy.ccall
+    @cy.returns(str)
+    def base_string(self):
+        return self.string
+        
+    @cy.ccall
     @cy.locals(filename = str)
     def load_file(self, filename):
         """Read in file contents and set the current string."""
@@ -90,6 +95,7 @@ class SourceString(object):
     @cy.locals(length = cy.int)
     def eat_length(self, length):
         """Move current position by length and set eos if not has_space()."""
+
         self.col += length
         self.pos += length
 
@@ -158,3 +164,13 @@ class SourceString(object):
             else:
                 chars.append(char)
         return ''.join(chars)
+
+    def generator(self, offset = 0):
+        for char in self.string[self.pos + offset:]:
+            yield char
+
+    @cy.ccall
+    @cy.locals(offset = cy.int)
+    @cy.returns(str)
+    def rest_of_string(self, offset = 0):
+        return self.string[self.pos + offset:]
