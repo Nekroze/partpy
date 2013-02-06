@@ -4,5 +4,6 @@ README.rst
 partcy.py
 setup.py
 partpy/__init__.py
+partpy/matcher.py
 partpy/sourcestring.py
 test/test_sourcestring.py

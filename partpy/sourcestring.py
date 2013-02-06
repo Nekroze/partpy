@@ -3,7 +3,6 @@ some simple methods for retrieving and moving current position."""
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
-from itertools import takewhile
 import cython as cy
 
 
@@ -147,11 +146,13 @@ class SourceString(object):
         string = self.string
         # Get a char for each char in the current string from pos onward
         #  solong as the char is not whitespace.
-        #list = [y for y in takewhile(lambda x: not x.isspace(), string[pos:])]
-        list = []
+        # The following is not yet supported with cython 0.18.0
+        #from itertools import takewhile
+        #chars = (y for y in takewhile(lambda x: not x.isspace(), string[pos:]))
+        chars = []
         for char in string[pos:]:
             if char.isspace():
                 break
             else:
-                list.append(char)
-        return ''.join(list)
+                chars.append(char)
+        return ''.join(chars)
