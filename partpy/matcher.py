@@ -12,13 +12,21 @@ class Matcher(object):
     source = cy.declare(SourceString)
     
     def __init__(self, source = None):
-        if source is not None:
+        if isinstance(source, SourceString):
             self.set_source(source)
+        elif isinstance(source, str):
+            self.new_source(source)
     
     @cy.ccall
     @cy.returns(SourceString)
     def get_source(self):
         return self.source
+    
+    @cy.ccall
+    @cy.locals(string = str)
+    def new_source(self, string):
+        self.source = SourceString()
+        self.source.set_string(string)
     
     @cy.ccall
     @cy.locals(source = SourceString)
