@@ -49,6 +49,10 @@ class CleanUp(Command):
         for root, dirnames, filenames in os.walk('.'):
           for filename in fnmatch.filter(filenames, '*.pyc'):
               matches.append(os.path.join(root, filename))
+          for filename in fnmatch.filter(filenames, '*.pyd'):
+              matches.append(os.path.join(root, filename))
+          for filename in fnmatch.filter(filenames, '*.pyo'):
+              matches.append(os.path.join(root, filename))
           for filename in fnmatch.filter(filenames, '*.so'):
               matches.append(os.path.join(root, filename))
           for dirname in fnmatch.filter(dirnames, '__pycache__'):

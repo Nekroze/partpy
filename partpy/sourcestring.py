@@ -125,7 +125,8 @@ class SourceString(object):
     @cy.locals(length = cy.int, trim = cy.int, pos = cy.int, distance = cy.int)
     @cy.returns(str)
     def get_length(self, length, trim = 0):
-        """Return string at current position + length."""
+        """Return string at current position + length.
+        If trim == true then get as much as possible before eos"""
         if not self.has_space():
             return ''
             
