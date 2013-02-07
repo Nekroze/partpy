@@ -75,6 +75,10 @@ class Matcher(object):
                pattern = str, output = list, offset = cy.int, firstchar = str)
     @cy.returns(str)
     def match_pattern(self, first, rest = None):
+        ftype = type(first)
+        if rest is None and ftype is tuple or ftype is list:
+            first, rest = first
+            
         firstchar = self.source.get_char()
         if not firstchar in first:
             return ''
@@ -94,6 +98,10 @@ class Matcher(object):
     @cy.locals(output = list, offset = cy.int, firstchar = str)
     @cy.returns(str)
     def match_function(self, first, rest = None):
+        ftype = type(first)
+        if rest is None and ftype is tuple or ftype is list:
+            first, rest = first
+            
         firstchar = self.source.get_char()
         if not first(firstchar):
             return ''

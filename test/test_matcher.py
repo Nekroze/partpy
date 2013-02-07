@@ -28,12 +28,12 @@ class Test(unittest.TestCase):
         self.assertEqual(MAT.match_any_char(alphas), 'i')
         self.assertEqual(MAT.match_any_char(alphas.replace('i', '')), '')
         
-    def test_match_pattern(self):
+    def test_match_string(self):
         MAT = Matcher('Nekroze')
         alphas = 'abcdefghijklmnopqrstuvwxyz'
         
         self.assertEqual(MAT.match_pattern(alphas.upper()), 'N')
-        self.assertEqual(MAT.match_pattern(alphas.upper(), alphas), 'Nekroze')
+        self.assertEqual(MAT.match_pattern([alphas.upper(), alphas]), 'Nekroze')
         self.assertEqual(MAT.match_pattern(alphas), '')
         
     def test_match_pattern(self):
@@ -45,7 +45,7 @@ class Test(unittest.TestCase):
         
         self.assertEqual(MAT.match_function(lambda c: c == 'T' or c in 'te'), 'Te')
         lam = (lambda c: c == 'T', lambda c: c == 'e')
-        self.assertEqual(MAT.match_function(*lam), 'Te')
+        self.assertEqual(MAT.match_function(lam), 'Te')
         
 
 if __name__ == "__main__":
