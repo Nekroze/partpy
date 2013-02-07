@@ -5,7 +5,8 @@ from partpy.matcher import Matcher
 class Test(unittest.TestCase):
     
     def test_match_string(self):
-        MAT = Matcher('hello world\ntesting stuff')
+        MAT = Matcher()
+        MAT.set_string('hello world\ntesting stuff')
         
         self.assertEqual(MAT.match_string('hello', 1), True)
         self.assertEqual(MAT.match_string('hello'), True)
@@ -15,21 +16,24 @@ class Test(unittest.TestCase):
         self.assertEqual(MAT.match_string('hello world'), True)
         
     def test_match_any_string(self):
-        MAT = Matcher('import partpy')
+        MAT = Matcher()
+        MAT.set_string('import partpy')
         strings = ['import ', 'def', 'import']
         
         self.assertEqual(MAT.match_any_string(strings), 'import ')
         self.assertEqual(MAT.match_any_string(strings, 1), 'import')
         
     def test_match_any_char(self):
-        MAT = Matcher('import partpy')
+        MAT = Matcher()
+        MAT.set_string('import partpy')
         alphas = 'abcdefghijklmnopqrstuvwxyz'
         
         self.assertEqual(MAT.match_any_char(alphas), 'i')
         self.assertEqual(MAT.match_any_char(alphas.replace('i', '')), '')
         
     def test_match_pattern(self):
-        MAT = Matcher('Nekroze')
+        MAT = Matcher()
+        MAT.set_string('Nekroze')
         alphas = 'abcdefghijklmnopqrstuvwxyz'
         
         self.assertEqual(MAT.match_pattern(alphas.upper()), 'N')
@@ -37,7 +41,8 @@ class Test(unittest.TestCase):
         self.assertEqual(MAT.match_pattern(alphas), '')
         
     def test_match_function(self):
-        MAT = Matcher('Test100')
+        MAT = Matcher()
+        MAT.set_string('Test100')
         
         self.assertEqual(MAT.match_function(str.isalpha), 'Test')
         self.assertEqual(MAT.match_function(str.isalpha, str.isalnum), 'Test100')

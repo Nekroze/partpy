@@ -8,37 +8,10 @@ from .sourcestring import SourceString
 
 
 @cy.cclass
-class Matcher(object):
-    """Contains a SourceString and methods to assist
+class Matcher(SourceString):
+    """Subclass of SourceString and methods to assist
     with pattern/string matching against the SoruceString."""
-    source = cy.declare(SourceString)
     
-    def __init__(self, source = None):
-        """Can take either a string or SourceString."""
-        if isinstance(source, SourceString):
-            self.set_source(source)
-        elif isinstance(source, str):
-            self.new_source(source)
-    
-    @cy.ccall
-    @cy.returns(SourceString)
-    def get_source(self):
-        """Returns the current SourceString"""
-        return self.source
-    
-    @cy.ccall
-    @cy.locals(string = str)
-    def new_source(self, string):
-        """Creates a new SourceString out of string for use."""
-        self.source = SourceString()
-        self.source.set_string(string)
-    
-    @cy.ccall
-    @cy.locals(source = SourceString)
-    def set_source(self, source):
-        """Sets the current SourceString"""
-        self.source = source
-        
     @cy.ccall
     @cy.locals(string = str, current = str, word = cy.int)
     @cy.returns(cy.int)
@@ -48,8 +21,8 @@ class Matcher(object):
         
         If word is >= 1 then it will only match string followed by whitepsace"""
         if word:
-            return self.source.get_string() == string
-        return self.source.get_length(len(string)) == string
+            return self.get_string() == string
+        return self.get_length(len(string)) == string
         
     @cy.ccall
     @cy.locals(strings = list, word = cy.int, 
@@ -63,8 +36,8 @@ class Matcher(object):
         Will only match if string is followed by a whitespace."""
         current = ''
         if word:
-            current = self.source.get_string()
-            return current if self.source.get_string() in strings else ''
+            current = self.get_string()
+            return current if self.get_string() in strings else ''
         
         sorted(strings, key = len)
         
@@ -73,7 +46,7 @@ class Matcher(object):
         for string in strings:
             length = len(string)
             if length != currentlength:
-                current = self.source.get_length(length)
+                current = self.get_length(length)
             if string == current:
                 return string
         return ''
@@ -83,7 +56,7 @@ class Matcher(object):
     @cy.returns(str)
     def match_any_char(self, chars):
         """Match and return the current SourceString char if its in chars."""
-        current = self.source.get_char()
+        current = self.get_char()
         return current if current in chars else ''
         
     @cy.ccall
@@ -102,7 +75,7 @@ class Matcher(object):
         if rest is None and ftype is tuple or ftype is list:
             first, rest = first
             
-        firstchar = self.source.get_char()
+        firstchar = self.get_char()
         if not firstchar in first:
             return ''
             
@@ -110,7 +83,7 @@ class Matcher(object):
         offset = 1
         pattern = first if rest is None else rest
         
-        for char in self.source.generator(offset):
+        for char in self.string[self.pos +offset:]:
             if char in pattern:
                 output.append(char)
             else:
@@ -136,7 +109,7 @@ class Matcher(object):
         if rest is None and ftype is tuple or ftype is list:
             first, rest = first
             
-        firstchar = self.source.get_char()
+        firstchar = self.get_char()
         if not first(firstchar):
             return ''
             
@@ -144,7 +117,7 @@ class Matcher(object):
         offset = 1
         pattern = first if rest is None else rest
         
-        for char in self.source.generator(offset):
+        for char in self.string[self.pos +offset:]:
             if pattern(char):
                 output.append(char)
             else:
