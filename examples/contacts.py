@@ -5,12 +5,14 @@ __email__ = 'nekroze@eturnilnetwork.com'
 
 from partpy import Matcher
 from partpy import fpattern as fpat
-from partpy import fpattern as spat
+from partpy import spattern as spat
 
-ExampleString = '''
-Taylor Nekroze Lawson : nekroze@eturnilnetwork.com
+EXAMPLE = '''
+Taylor Nekroze Lawson - nekroze@eturnilnetwork.com
 Some Random:randomkid@randomail.net
 '''
+EXPECTED = {'Taylor Nekroze Lawson': 'nekroze@eturnilnetwork.com',
+                  'Some Random': 'randomkid@randomail.net'}
 
 class ContactsParser(Matcher):
     
@@ -31,8 +33,8 @@ class ContactsParser(Matcher):
             raise Exception('Expecting a name')
         
         self.parse_whitespace()
-        if not self.match_string(':'):
-            raise Exception('Expecting :, found: ' + self.get_char())
+        if not self.match_any_char(':-'):
+            raise Exception('Expecting : or -, found: ' + self.get_char())
         self.eat_length(1)
         self.parse_whitespace()
         
@@ -57,23 +59,27 @@ class ContactsParser(Matcher):
                 break
             self.eat_string(part)
             name.append(part)
+            if self.get_char() == ' ':
+                self.eat_length(1)
         if not len(name):
             raise Exception('Expecting a title cased name')
         return ' '.join(name)
         
     def parse_email(self):
         email = []
-        name = self.match_pattern(fpat.alphal)
-        
-        nextchar = self.match_any_char('@.')
-        if not name and not nextchar:
-            raise Exception('Expecting @, found: ' + nextchar)
-            
+        name = self.match_function(fpat.alphal)
+        if not name:
+            raise Exception('Expected a valid name')
         
         email.append(name)
         self.eat_string(name)
+        
+        nextchar = self.get_char()
+        if not nextchar == '@':
+            raise Exception('Expecting @, found: ' + nextchar)
+            
         email.append(nextchar)
-        self.eat_string(nextchar)
+        self.eat_length(1)  # eat the @
         
         site = self.match_pattern(spat.alphal + '.')
         if not site:
@@ -82,3 +88,5 @@ class ContactsParser(Matcher):
         email.append(site)
         self.eat_string(site)
         return ''.join(email)
+        
+PARSER = ContactsParser().set_string(EXAMPLE)
