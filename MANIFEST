@@ -8,6 +8,7 @@ partpy/fpattern.py
 partpy/matcher.py
 partpy/sourcestring.py
 partpy/spattern.py
+test/test_examples_contacts.py
 test/test_fpattern.py
 test/test_matcher.py
 test/test_sourcestring.py

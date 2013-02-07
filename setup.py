@@ -103,7 +103,7 @@ class Style(Command):
 
     def run(self):
         """Run pylint."""
-        if not os.system('pylint --rcfile=.pylintrc ' + SOURCE):
+        if not os.system('pylint --rcfile=.pylintrc ' + SOURCE + ' examples'):
             print("Pylint reports no inconsistencies.")
         else:
             sys.exit(1)

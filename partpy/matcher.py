@@ -83,7 +83,7 @@ class Matcher(SourceString):
         offset = 1
         pattern = first if rest is None else rest
         
-        for char in self.string[self.pos +offset:]:
+        for char in self.generator(offset):
             if char in pattern:
                 output.append(char)
             else:
@@ -117,7 +117,7 @@ class Matcher(SourceString):
         offset = 1
         pattern = first if rest is None else rest
         
-        for char in self.string[self.pos +offset:]:
+        for char in self.generator(offset):
             if pattern(char):
                 output.append(char)
             else:

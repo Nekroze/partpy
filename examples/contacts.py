@@ -4,7 +4,6 @@ __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
 from partpy import Matcher
-from partpy import fpattern as fpat
 from partpy import spattern as spat
 
 EXAMPLE = '''
@@ -54,7 +53,7 @@ class ContactsParser(Matcher):
     def parse_name(self):
         name = []
         while True:
-            part = self.match_function(fpat.alphau, fpat.alphal)
+            part = self.match_pattern(spat.alphau, spat.alphal)
             if part == '':
                 break
             self.eat_string(part)
@@ -67,7 +66,7 @@ class ContactsParser(Matcher):
         
     def parse_email(self):
         email = []
-        name = self.match_function(fpat.alphal)
+        name = self.match_pattern(spat.alphal)
         if not name:
             raise Exception('Expected a valid name')
         
