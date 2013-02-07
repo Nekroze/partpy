@@ -3,7 +3,7 @@ from partpy.matcher import Matcher
 from partpy import fpattern as pat
 
 
-class Test(unittest.TestCase):
+class Test_Function_Patterns(unittest.TestCase):
     
     def test_alphas(self):
         MAT = Matcher()
@@ -24,7 +24,7 @@ class Test(unittest.TestCase):
         self.assertEqual(MAT.match_function(pat.number), '1234')
         self.assertEqual(MAT2.match_function(pat.number), '')
         
-    def test_patecials(self):
+    def test_specials(self):
         MAT = Matcher()
         MAT.set_string('hello.world')
         MAT2 = Matcher()

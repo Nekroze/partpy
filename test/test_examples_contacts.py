@@ -1,5 +1,5 @@
 import unittest
-from examples.contacts import *
+from examples.contacts import PARSER, EXPECTED
 
 
 class Test_Contacts(unittest.TestCase):

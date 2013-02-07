@@ -2,7 +2,7 @@ import unittest
 from partpy.matcher import Matcher
 
 
-class Test(unittest.TestCase):
+class Test_Matcher(unittest.TestCase):
     
     def test_match_string(self):
         MAT = Matcher()
