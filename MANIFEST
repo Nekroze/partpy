@@ -4,7 +4,11 @@ README.rst
 partcy.py
 setup.py
 partpy/__init__.py
+partpy/fpattern.py
 partpy/matcher.py
 partpy/sourcestring.py
+partpy/spattern.py
+test/test_fpattern.py
 test/test_matcher.py
 test/test_sourcestring.py
+test/test_spattern.py
