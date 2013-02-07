@@ -51,6 +51,20 @@ class Test_Matcher(unittest.TestCase):
         self.assertEqual(MAT.match_function(lambda c: c == 'T' or c in 'te'), 'Te')
         lam = (lambda c: c == 'T', lambda c: c == 'e')
         self.assertEqual(MAT.match_function(lam), 'Te')
+        
+    def test_count_indents(self):
+        MAT = Matcher()
+        MAT.set_string('  \tTest100')
+        
+        self.assertEqual(MAT.count_indents(2, 1), 2)
+        self.assertEqual(MAT.count_indents(2), 1)
+        
+    def test_count_indents_length(self):
+        MAT = Matcher()
+        MAT.set_string('  \tTest100')
+        
+        self.assertEqual(MAT.count_indents_length(2, 1), (2, 3))
+        self.assertEqual(MAT.count_indents_length(2), (1, 2))
 
 
 if __name__ == "__main__":

@@ -123,3 +123,52 @@ class Matcher(SourceString):
             else:
                 break
         return ''.join(output)
+    
+    @cy.ccall
+    @cy.locals(spacecount = cy.int, tabs = cy.int, 
+               indents = cy.int, current = cy.int)
+    @cy.returns(cy.int)
+    def count_indents(self, spacecount, tabs = 0):
+        """Counts the number of indents that can be tabs or spacecount
+        number of spaces in a row."""
+        current = 0
+        indents = 0
+        for char in self.generator():
+            if char == ' ':
+                current += 1
+            elif tabs and char == '\t':
+                indents += 1
+                current = 0
+            else:
+                break
+            if current == spacecount:
+                indents += 1
+                current = 0
+        return indents
+    
+    @cy.ccall
+    @cy.locals(spacecount = cy.int, tabs = cy.int, 
+               indents = cy.int, current = cy.int, charlen = cy.int)
+    @cy.returns(tuple)
+    def count_indents_length(self, spacecount, tabs = 0):
+        """Counts the number of indents that can be tabs or spacecount
+        number of spaces in a row. 
+        
+        Also returns the character length of the indents.
+        """
+        current = 0
+        indents = 0
+        charlen = 0
+        for char in self.generator():
+            if char == ' ':
+                current += 1
+            elif tabs and char == '\t':
+                indents += 1
+                current = 0
+            else:
+                break
+            charlen += 1
+            if current == spacecount:
+                indents += 1
+                current = 0
+        return (indents, charlen)
