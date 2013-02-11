@@ -14,10 +14,10 @@ class SourceString(object):
     It also stores the current row and column position as manually counted.
     """
     string = cy.declare(str)
-    cy.declare(length = cy.int, 
-               pos = cy.int, row = cy.int, col = cy.int, 
+    cy.declare(length = cy.int,
+               pos = cy.int, row = cy.int, col = cy.int,
                eos = cy.int)
-    
+
     def __init__(self):
         self.string = ''
         self.length = 0
@@ -25,22 +25,22 @@ class SourceString(object):
         self.col = 0
         self.row = 0
         self.eos = 0
-        
+
     @cy.ccall
     @cy.returns(cy.int)
     def end(self):
         return self.eos
-        
+
     @cy.ccall
     @cy.returns(cy.int)
     def line(self):
         return self.row
-        
+
     @cy.ccall
     @cy.returns(cy.int)
     def column(self):
         return self.col
-        
+
     @cy.ccall
     @cy.returns(cy.int)
     def position(self):
@@ -50,7 +50,7 @@ class SourceString(object):
     @cy.returns(str)
     def base_string(self):
         return self.string
-        
+
     @cy.ccall
     @cy.locals(filename = str)
     def load_file(self, filename):
@@ -124,7 +124,7 @@ class SourceString(object):
         """Return the current character in the working string."""
         if not self.has_space():
             return ''
-            
+
         return self.string[self.pos]
 
     @cy.ccall
@@ -135,7 +135,7 @@ class SourceString(object):
         If trim == true then get as much as possible before eos"""
         if not self.has_space():
             return ''
-            
+
         pos = self.pos
         distance = pos + length
         if not trim and not self.has_space(length):
@@ -149,7 +149,7 @@ class SourceString(object):
         """Return non space chars from current position until a whitespace."""
         if not self.has_space():
             return ''
-            
+
         pos = self.pos
         string = self.string
         # Get a char for each char in the current string from pos onward
@@ -166,6 +166,7 @@ class SourceString(object):
         return ''.join(chars)
 
     def generator(self, offset = 0):
+        """A generator for the current position to the end, pure python."""
         for char in self.string[self.pos + offset:]:
             yield char
 
@@ -173,4 +174,55 @@ class SourceString(object):
     @cy.locals(offset = cy.int)
     @cy.returns(str)
     def rest_of_string(self, offset = 0):
+        """A copy of the current position till the end of the string."""
         return self.string[self.pos + offset:]
+
+    @cy.ccall
+    @cy.locals(output = list, pos = cy.int, end = cy.int, string = str)
+    @cy.returns(str)
+    def get_line(self):
+        """Return the entirety of the current line."""
+        pos = self.pos - self.col
+        string = self.string
+        end = self.length
+
+        output = []
+        while string[pos] != '\n':
+            output.append(string[pos])
+            pos += 1
+            if pos == end:
+                break
+
+        return ''.join(output)
+
+    @cy.ccall
+    @cy.locals(past = cy.int, future = cy.int,
+        string = str, pos = cy.int, lines = cy.int, linesback = cy.int,
+        output = list, end = cy.int)
+    @cy.returns(str)
+    def get_surrounding_lines(self, past = 1, future = 1):
+        """Return the current line and x,y previous and future lines."""
+        string = self.string
+        pos = self.pos - self.col
+        end = self.length
+
+        linesback = 0
+        while linesback > -past:
+            if pos <= 0:
+                break
+            elif string[pos - 2] == '\n':
+                linesback -= 1
+            pos -= 1
+
+        output = []
+        lines = future + 1
+        while linesback < lines:
+            if pos >= end:
+                output.append(string[pos - 1])
+                break
+            elif string[pos] == '\n':
+                linesback += 1
+            output.append(string[pos])
+            pos += 1
+
+        return ''.join(output[:-1])

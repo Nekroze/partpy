@@ -9,6 +9,8 @@ class Test_SourceString(unittest.TestCase):
         self.SRC.set_string('hello world')
         self.MLSRC = SourceString()
         self.MLSRC.set_string('hello\nworld')
+        self.BSRC = SourceString()
+        self.BSRC.set_string('hello\nworld\nthis\nis\na\ntest')
 
     def test_has_space(self):
         self.assertEqual(self.SRC.has_space(), True)
@@ -21,28 +23,28 @@ class Test_SourceString(unittest.TestCase):
     def test_eat_string(self):
         self.SRC.eat_string('hello world')
         self.assertEqual(self.SRC.end(), True)
-        
+
     def test_eat_string_multiline_peices(self):
         self.MLSRC.eat_string(self.MLSRC.get_length(5))
         self.assertEqual(self.MLSRC.line(), 0)
         self.assertEqual(self.MLSRC.column(), 5)
-        
+
         self.assertEqual(self.MLSRC.get_char(), '\n')
         self.MLSRC.eat_string(self.MLSRC.get_char())
         self.assertEqual(self.MLSRC.line(), 1)
         self.assertEqual(self.MLSRC.column(), 0)
-        
+
         self.MLSRC.eat_string(self.MLSRC.get_length(5))
         self.assertEqual(self.MLSRC.line(), 1)
         self.assertEqual(self.MLSRC.column(), 5)
         self.assertEqual(self.MLSRC.get_char(), '')
-        
+
     def test_eat_string_multiline_chunk(self):
         self.MLSRC.eat_string('hello\nworld')
         self.assertEqual(self.MLSRC.line(), 1)
         self.assertEqual(self.MLSRC.column(), 5)
         self.assertEqual(self.MLSRC.get_char(), '')
-        
+
     def test_get_length(self):
         self.assertEqual(self.SRC.get_length(5), 'hello')
         self.assertEqual(self.SRC.get_length(11), 'hello world')
@@ -56,7 +58,7 @@ class Test_SourceString(unittest.TestCase):
         self.SRC.eat_length(1)
         self.assertEqual(self.SRC.end(), True)
         self.assertEqual(self.SRC.get_char(), '')
-        
+
     def test_get_string(self):
         self.assertEqual(self.SRC.get_string(), 'hello')
         self.SRC.eat_length(5)
@@ -67,6 +69,24 @@ class Test_SourceString(unittest.TestCase):
         self.assertEqual(self.SRC.get_string(), '')
         self.SRC.eat_length(5)
         self.assertEqual(self.SRC.end(), True)
+
+    def test_get_line(self):
+        self.assertEqual(self.BSRC.get_line(), 'hello')
+        self.BSRC.eat_string('hello\n')
+        self.assertEqual(self.BSRC.get_line(), 'world')
+
+    def test_get_surrounding_lines(self):
+        lines = self.BSRC.get_surrounding_lines()
+        self.assertEqual(lines, 'hello\nworld')
+
+        self.BSRC.eat_string('hello\nworld\n')
+        lines = self.BSRC.get_surrounding_lines()
+        self.assertEqual(lines, 'world\nthis\nis')
+
+        self.BSRC.eat_string('this\nis\na\n')
+        lines = self.BSRC.get_surrounding_lines()
+        self.assertEqual(lines, 'a\ntest')
+
 
 if __name__ == "__main__":
     unittest.main()
