@@ -14,8 +14,8 @@ class SourceString(object):
     It also stores the current row and column position as manually counted.
     """
     string = cy.declare(str)
-    cy.declare(length = cy.int,
-               pos = cy.int, row = cy.int, col = cy.int,
+    cy.declare(length = cy.long,
+               pos = cy.long, row = cy.long, col = cy.int,
                eos = cy.int)
 
     def __init__(self):
@@ -128,7 +128,7 @@ class SourceString(object):
         return self.string[self.pos]
 
     @cy.ccall
-    @cy.locals(length = cy.int, trim = cy.int, pos = cy.int, distance = cy.int)
+    @cy.locals(length = cy.int, trim = cy.int, pos = cy.long, distance = cy.int)
     @cy.returns(str)
     def get_length(self, length, trim = 0):
         """Return string at current position + length.
@@ -143,7 +143,7 @@ class SourceString(object):
         return self.string[pos:distance]
 
     @cy.ccall
-    @cy.locals(pos = cy.int)
+    @cy.locals(pos = cy.long, string = str, chars = list)
     @cy.returns(str)
     def get_string(self):
         """Return non space chars from current position until a whitespace."""
@@ -178,7 +178,7 @@ class SourceString(object):
         return self.string[self.pos + offset:]
 
     @cy.ccall
-    @cy.locals(output = list, pos = cy.int, end = cy.int, string = str)
+    @cy.locals(output = list, pos = cy.long, end = cy.long, string = str)
     @cy.returns(str)
     def get_line(self):
         """Return the entirety of the current line."""
@@ -197,8 +197,8 @@ class SourceString(object):
 
     @cy.ccall
     @cy.locals(past = cy.int, future = cy.int,
-        string = str, pos = cy.int, lines = cy.int, linesback = cy.int,
-        output = list, end = cy.int)
+        end = cy.long, pos = cy.long, lines = cy.int, linesback = cy.int,
+        output = list, string = str)
     @cy.returns(str)
     def get_surrounding_lines(self, past = 1, future = 1):
         """Return the current line and x,y previous and future lines."""
