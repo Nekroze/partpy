@@ -125,4 +125,5 @@ class ContactsParser(Matcher):
         self.eat_string(site)  # Eat the site
         return ''.join(email)  # Return the matched string
 
-PARSER = ContactsParser().set_string(EXAMPLE)
+PARSER = ContactsParser()
+PARSER.set_string(EXAMPLE)
