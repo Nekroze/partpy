@@ -131,7 +131,7 @@ class SourceString(object):
 
         return ''.join(output)
 
-    def get_surrounding_lines(self, past = 1, future = 1):
+    def get_lines(self, past = 1, future = 1):
         """Return the current line and x,y previous and future lines."""
         string = self.string
         pos = self.pos - self.col
@@ -166,7 +166,7 @@ class PartpyError(Exception):
         self.partpyObj = obj
 
     def __str__(self):
-        lines = self.obj.get_surrounding_lines(1, 0)
+        lines = self.obj.get_lines(1, 0)
         highlighter = ' ' * (self.obj.col - 1) + '^'
 
         output = lines + '\n' + highlighter

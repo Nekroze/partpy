@@ -91,22 +91,22 @@ class Test_SourceString(unittest.TestCase):
         SRC.eat_string('hello\n')
         self.assertEqual(SRC.get_line(), 'world')
 
-    def test_get_surrounding_lines(self):
+    def test_get_lines(self):
         SRC = SourceString()
         SRC.set_string('hello\nworld\nthis\nis\na\ntest')
 
-        lines = SRC.get_surrounding_lines()
+        lines = SRC.get_lines()
         self.assertEqual(lines, 'hello\nworld')
 
         SRC.eat_string('hello\nworld\n')
-        lines = SRC.get_surrounding_lines()
+        lines = SRC.get_lines()
         self.assertEqual(lines, 'world\nthis\nis')
 
-        lines = SRC.get_surrounding_lines(1,0)
+        lines = SRC.get_lines(1,0)
         self.assertEqual(lines, 'world\nthis')
 
         SRC.eat_string('this\nis\na\n')
-        lines = SRC.get_surrounding_lines()
+        lines = SRC.get_lines()
         self.assertEqual(lines, 'a\ntest')
 
 
