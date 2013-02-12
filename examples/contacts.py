@@ -20,10 +20,7 @@ class ContactsParser(Matcher):
     """
     def parse(self):
         """Run the parser over the entire sourestring and return the results."""
-        try:
-            return self.parse_top_level()
-        except PartpyError as e:
-            print e
+        pass
 
     def parse_top_level(self):
         """The top level parser will do a loop where it looks for a single

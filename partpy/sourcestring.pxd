@@ -38,4 +38,4 @@ cdef class SourceString(object):
 
     @cy.locals(output = list, string = str,
         end = cy.long, pos = cy.long, lines = cy.int, linesback = cy.int)
-    cpdef str get_surrounding_lines(self, int past = *, int future = *)
+    cpdef str get_lines(self, int past = *, int future = *)
