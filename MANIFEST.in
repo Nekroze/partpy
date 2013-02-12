@@ -1,3 +1,5 @@
 include README.rst
 include LICENSE.txt
 include partcy.py
+include examples
+include tox.ini
