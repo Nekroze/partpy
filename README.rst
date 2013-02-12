@@ -29,7 +29,9 @@ Usage
 There are tutorials and information on how to use ``partpy`` at
 http://github.com/Nekroze/partpy/wiki and the main GitHub repository
 contains an examples directory that are tested for correctness each
-release so they will always be up to date.
+release so they will always be up to date. Also many examples for
+how each feature is used can be seen in the test directory at github
+and also shows the expected output of each test.
 
 
 Feedback
