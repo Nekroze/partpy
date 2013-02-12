@@ -4,8 +4,12 @@ import os
 import sys
 import platform
 from distutils.core import setup, Command
-from Cython.Distutils import build_ext
-import partcy
+cy = True
+try:
+    from Cython.Distutils import build_ext
+    import partcy
+except ImportError:
+    cy = False
 
 __version__ = '0.1.0'
 __author__ = 'Nekroze'
@@ -19,7 +23,8 @@ PROJECTLICENSE = 'MIT'
 PLATFORMS = ['*nix', 'Windows']
 
 EXTENSIONS = []
-EXTENSIONS.extend(partcy.EXTENSIONS)
+if cy:
+    EXTENSIONS.extend(partcy.EXTENSIONS)
 
 
 PYTHON = 'python'
@@ -63,12 +68,12 @@ class CleanUp(Command):
               matches.append(os.path.join(root, filename))
           for dirname in fnmatch.filter(dirnames, '__pycache__'):
               dirs.append(os.path.join(root, dirname))
-              
+
         for match in matches:
             os.remove(match)
         for dir in dirs:
             shutil.rmtree(dir)
-            
+
 class Test(Command):
     """Run test suite."""
     description = "Run test suite"
@@ -171,7 +176,7 @@ class PyPiUpload(Command):
             sys.exit(1)
         print('PyPi Upload successful.')
 
-            
+
 vRe = re.compile(r'__version__\s*=\s*(\S+)', re.M)
 data = open('setup.py').read()
 
@@ -180,17 +185,18 @@ kwds['version'] = eval(vRe.search(data).group(1))
 kwds['description'] = PROJECTDESC
 kwds['long_description'] = open('README.rst').read()
 kwds['license'] = PROJECTLICENSE
-
-
-setup(
-    cmdclass={
+cmdclass={
         'style': Style,
         'test': Test,
         'prep': Prep,
         'commit': GitCommit,
-        'pypiup': PyPiUpload, 
-        'cleanup': CleanUp, 
-        'build_ext': build_ext},
+        'pypiup': PyPiUpload,
+        'cleanup': CleanUp}
+if cy:
+    cmdclass['build_ext'] = build_ext
+
+setup(
+    cmdclass = cmdclass,
 
     name=PROJECTNAME,
     author=__author__,
@@ -199,15 +205,15 @@ setup(
     platforms=PLATFORMS,
     packages=[SOURCE],
     ext_modules = EXTENSIONS,
-    requires = ['cython'], 
+    requires = ['cython'],
     classifiers=[
-        'Development Status :: 3 - Alpha', 
-        'License :: OSI Approved :: MIT License',  
-        'Operating System :: OS Independent', 
-        'Programming Language :: Python :: 3.2', 
-        'Programming Language :: Python :: 2.7', 
-        'Programming Language :: Python :: Implementation :: PyPy', 
-        'Topic :: Software Development :: Compilers', 
+        'Development Status :: 3 - Alpha',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'Topic :: Software Development :: Compilers',
         'Topic :: Text Processing :: General'
     ],
     **kwds

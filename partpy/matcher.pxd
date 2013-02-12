@@ -17,10 +17,10 @@ cdef class Matcher(SourceString):
     @cy.locals(current = str)
     cpdef str match_any_char(self, str chars)
 
-    @cy.locals(pattern = str, output = list, offset = cy.int, firstchar = str)
+    @cy.locals(pattern = str, output = list, firstchar = str)
     cpdef str match_pattern(self, first, str rest = ?)
 
-    @cy.locals(output = list, offset = cy.int, firstchar = str)
+    @cy.locals(output = list, firstchar = str)
     cpdef str match_function(self, first, rest = ?)
 
     @cy.locals(indents = cy.int, spaces = cy.int)

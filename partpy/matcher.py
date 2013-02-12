@@ -17,7 +17,7 @@ class Matcher(SourceString):
         If word is >= 1 then it will only match string followed by whitepsace"""
         if word:
             return self.get_string() == string
-        return self.get_length(len(string)) == string
+        return self.string[self.pos:len(string)] == string
 
     def match_any_string(self, strings, word = 0):
         """Attempts to match each string in strings in order of length.
@@ -37,14 +37,14 @@ class Matcher(SourceString):
         for string in strings:
             length = len(string)
             if length != currentlength:
-                current = self.get_length(length)
+                current = self.string[self.pos:length]
             if string == current:
                 return string
         return ''
 
     def match_any_char(self, chars):
         """Match and return the current SourceString char if its in chars."""
-        current = self.get_char()
+        current = self.string[self.pos]
         return current if current in chars else ''
 
     def match_pattern(self, first, rest = None):
@@ -56,18 +56,17 @@ class Matcher(SourceString):
         If rest is defined then first is used only to match the first arg
         and the rest of the chars are matched against rest."""
         ftype = type(first)
-        if rest is None and ftype is tuple or ftype is list:
+        if rest is None and ftype in (tuple, list):
             first, rest = first
 
-        firstchar = self.get_char()
+        firstchar = self.string[self.pos]
         if not firstchar in first:
             return ''
 
         output = [firstchar]
-        offset = 1
         pattern = first if rest is None else rest
 
-        for char in self.generator(offset):
+        for char in self.string[self.pos + 1:]:
             if char in pattern:
                 output.append(char)
             else:
@@ -87,18 +86,17 @@ class Matcher(SourceString):
         If rest is defined then first is used only to match the first arg
         and the rest of the chars are matched against rest."""
         ftype = type(first)
-        if rest is None and ftype is tuple or ftype is list:
+        if rest is None and ftype in (tuple, list):
             first, rest = first
 
-        firstchar = self.get_char()
+        firstchar = self.string[self.pos]
         if not first(firstchar):
             return ''
 
         output = [firstchar]
-        offset = 1
         pattern = first if rest is None else rest
 
-        for char in self.generator(offset):
+        for char in self.string[self.pos + 1:]:
             if pattern(char):
                 output.append(char)
             else:
@@ -110,7 +108,7 @@ class Matcher(SourceString):
         number of spaces in a row."""
         spaces = 0
         indents = 0
-        for char in self.generator():
+        for char in self.string[self.pos:]:
             if char == ' ':
                 spaces += 1
             elif tabs and char == '\t':
@@ -132,7 +130,7 @@ class Matcher(SourceString):
         spaces = 0
         indents = 0
         charlen = 0
-        for char in self.generator():
+        for char in self.string[self.pos:]:
             if char == ' ':
                 spaces += 1
             elif tabs and char == '\t':
