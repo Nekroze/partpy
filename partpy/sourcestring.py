@@ -18,21 +18,6 @@ class SourceString(object):
         self.row = 0
         self.eos = 0
 
-    def end(self):
-        return self.eos
-
-    def line(self):
-        return self.row
-
-    def column(self):
-        return self.col
-
-    def position(self):
-        return self.pos
-
-    def base_string(self):
-        return self.string
-
     def load_file(self, filename):
         """Read in file contents and set the current string."""
         with open(filename, 'r') as sourcefile:

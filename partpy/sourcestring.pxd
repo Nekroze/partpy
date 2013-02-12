@@ -11,16 +11,6 @@ cdef class SourceString(object):
     cdef public long length, pos, row
     cdef public int col, eos
 
-    cpdef int end(self)
-
-    cpdef long line(self)
-
-    cpdef int column(self)
-
-    cpdef long position(self)
-
-    cpdef str base_string(self)
-
     cpdef load_file(self, str filename)
 
     cpdef set_string(self, str string)

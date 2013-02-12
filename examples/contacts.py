@@ -23,7 +23,7 @@ class ContactsParser(Matcher):
         input left or another contact is found to be parsed and stores them.
         """
         contacts = []
-        while not self.end():
+        while not self.eos:
             contact = self.parse_contact()  # match a contact expression.
             if not contact:  # There was no contact so end file.
                 break  # This would be a nice place to put other expressions.

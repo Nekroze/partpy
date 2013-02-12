@@ -20,24 +20,24 @@ class Test_SourceString(unittest.TestCase):
         SRC.set_string('hello world')
 
         SRC.eat_string('hello world')
-        self.assertEqual(SRC.end(), True)
+        self.assertTrue(SRC.eos)
 
     def test_eat_string_multiline_peices(self):
         SRC = SourceString()
         SRC.set_string('hello\nworld')
 
         SRC.eat_string(SRC.get_length(5))
-        self.assertEqual(SRC.line(), 0)
-        self.assertEqual(SRC.column(), 5)
+        self.assertEqual(SRC.row, 0)
+        self.assertEqual(SRC.col, 5)
 
         self.assertEqual(SRC.get_char(), '\n')
         SRC.eat_string(SRC.get_char())
-        self.assertEqual(SRC.line(), 1)
-        self.assertEqual(SRC.column(), 0)
+        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.col, 0)
 
         SRC.eat_string(SRC.get_length(5))
-        self.assertEqual(SRC.line(), 1)
-        self.assertEqual(SRC.column(), 5)
+        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.col, 5)
         self.assertEqual(SRC.get_char(), '')
 
     def test_eat_string_multiline_chunk(self):
@@ -45,8 +45,8 @@ class Test_SourceString(unittest.TestCase):
         SRC.set_string('hello\nworld')
 
         SRC.eat_string('hello\nworld')
-        self.assertEqual(SRC.line(), 1)
-        self.assertEqual(SRC.column(), 5)
+        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.col, 5)
         self.assertEqual(SRC.get_char(), '')
 
     def test_get_length(self):
@@ -66,7 +66,7 @@ class Test_SourceString(unittest.TestCase):
         SRC.eat_length(10)
         self.assertEqual(SRC.get_char(), 'd')
         SRC.eat_length(1)
-        self.assertEqual(SRC.end(), True)
+        self.assertTrue(SRC.eos)
         self.assertEqual(SRC.get_char(), '')
 
     def test_get_string(self):
@@ -81,7 +81,7 @@ class Test_SourceString(unittest.TestCase):
         SRC.eat_length(5)
         self.assertEqual(SRC.get_string(), '')
         SRC.eat_length(5)
-        self.assertEqual(SRC.end(), True)
+        self.assertTrue(SRC.eos)
 
     def test_get_line(self):
         SRC = SourceString()
