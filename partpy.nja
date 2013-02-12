@@ -1,0 +1,28 @@
+{
+  "mainFile": "", 
+  "venv": "", 
+  "relatedProjects": [], 
+  "name": "partpy", 
+  "license": "MIT License", 
+  "url": "", 
+  "pythonPath": "python", 
+  "preExecScript": "", 
+  "programParams": "", 
+  "PYTHONPATH": "", 
+  "supported-extensions": [
+    ".py", 
+    ".html", 
+    ".jpg", 
+    ".png", 
+    ".ui", 
+    ".css", 
+    ".json", 
+    ".js", 
+    ".ini", 
+    ".pyx", 
+    ".pxd"
+  ], 
+  "project-type": "Import from sources", 
+  "postExecScript": "", 
+  "description": ""
+}
