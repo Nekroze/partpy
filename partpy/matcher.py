@@ -17,7 +17,7 @@ class Matcher(SourceString):
         If word is >= 1 then it will only match string followed by whitepsace"""
         if word:
             return self.get_string() == string
-        return self.string[self.pos:len(string)] == string
+        return self.get_length(len(string)) == string
 
     def match_any_string(self, strings, word = 0):
         """Attempts to match each string in strings in order of length.
@@ -37,7 +37,7 @@ class Matcher(SourceString):
         for string in strings:
             length = len(string)
             if length != currentlength:
-                current = self.string[self.pos:length]
+                current = self.get_length(length)
             if string == current:
                 return string
         return ''

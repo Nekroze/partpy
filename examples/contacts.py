@@ -1,3 +1,4 @@
+from __future__ import print_function
 """Matcher utilizes SourceString to provide some simple string matching
 functionality."""
 __author__ = 'Taylor "Nekroze" Lawson'
@@ -20,7 +21,10 @@ class ContactsParser(Matcher):
     """
     def parse(self):
         """Run the parser over the entire sourestring and return the results."""
-        pass
+        try:
+            return self.parse_top_level()
+        except PartpyError as e:
+            print(e)
 
     def parse_top_level(self):
         """The top level parser will do a loop where it looks for a single
