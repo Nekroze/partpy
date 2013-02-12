@@ -4,6 +4,7 @@ __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
 from partpy import Matcher
+from partpy import PartpyError
 from partpy import spattern as spat
 
 EXAMPLE = '''
@@ -18,6 +19,13 @@ class ContactsParser(Matcher):
     while disregarding any kind of whitespace and store them in a dict.
     """
     def parse(self):
+        """Run the parser over the entire sourestring and return the results."""
+        try:
+            return self.parse_top_level()
+        except PartpyError as e:
+            print e
+
+    def parse_top_level(self):
         """The top level parser will do a loop where it looks for a single
         contact parse and then eats all whitespace until there is no more
         input left or another contact is found to be parsed and stores them.
@@ -42,18 +50,18 @@ class ContactsParser(Matcher):
         self.parse_whitespace()
         name = self.parse_name()  # parse a name expression and get the string.
         if not name:  # No name was found so shout it out.
-            raise Exception('Expecting a name')
+            raise PartpyError(self, 'Expecting a name')
 
         self.parse_whitespace()
         # allow name and email to be delimited by either a ':' or '-'
         if not self.match_any_char(':-'):
-            raise Exception('Expecting : or -, found: ' + self.get_char())
+            raise PartpyError(self, 'Expecting : or -, found: ' + self.get_char())
         self.eat_length(1)
         self.parse_whitespace()
 
         email = self.parse_email()  # parse an email and store its string.
         if not email:
-            raise Exception('Expecting an email address')
+            raise PartpyError(self, 'Expecting an email address')
         return (name, email)  # return the strings matching a name and email.
 
     def parse_whitespace(self):
@@ -89,7 +97,7 @@ class ContactsParser(Matcher):
                 self.eat_length(1)
 
         if not len(name):  # if no name parts where detected raise an expection.
-            raise Exception('Expecting a title cased name')
+            raise PartpyError(self, 'Expecting a title cased name')
         return ' '.join(name)  # return the strings of the names found
 
     def parse_email(self):
@@ -104,14 +112,14 @@ class ContactsParser(Matcher):
         # Match from current char until a non lower cased alpha
         name = self.match_pattern(spat.alphal)
         if not name:
-            raise Exception('Expected a valid name')
+            raise PartpyError(self, 'Expected a valid name')
 
         email.append(name)  # Store the name
         self.eat_string(name)  # Eat the name
 
         nextchar = self.get_char()
         if not nextchar == '@':
-            raise Exception('Expecting @, found: ' + nextchar)
+            raise PartpyError(self, 'Expecting @, found: ' + nextchar)
 
         email.append(nextchar)
         self.eat_length(1)  # Eat the '@' symbol
@@ -119,7 +127,7 @@ class ContactsParser(Matcher):
         # Use string pattern matching to match all lower cased alphas or '.'s.
         site = self.match_pattern(spat.alphal + '.')
         if not site:
-            raise Exception('Expecting a site, found: ' + site)
+            raise PartpyError(self, 'Expecting a site, found: ' + site)
 
         email.append(site)
         self.eat_string(site)  # Eat the site
