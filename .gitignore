@@ -35,6 +35,7 @@ nosetests.xml
 # Mr Developer
 *.e4p
 *.e5p
+*.nja
 .eric4project
 .eric5project
 .mr.developer.cfg
