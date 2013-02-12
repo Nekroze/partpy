@@ -11,13 +11,14 @@ class PartpyError(Exception):
     the optional message on the following line.
     """
     def __init__(self, obj, msg = None):
-        self.partpyMsg = msg
-        self.partpyObj = obj
+        super(PartpyError, self).__init__(obj, msg)
+        self.partpymsg = msg
+        self.partpyobj = obj
 
     def __str__(self):
         output = []
-        splitlines = self.partpyObj.get_lines(1, 0).split('\n')
-        start = self.partpyObj.row - len(splitlines) + 1
+        splitlines = self.partpyobj.get_lines(1, 0).split('\n')
+        start = self.partpyobj.row - len(splitlines) + 1
         for line in splitlines:
             padding = 0
             if start < 1000:
@@ -29,8 +30,8 @@ class PartpyError(Exception):
             output.append(str(start) + (' ' * padding) + '|' + line)
             start += 1
 
-        output.append(' ' * (self.partpyObj.col - 1) + '^')
-        if self.partpyMsg:
-            output.append(self.partpyMsg)
+        output.append(' ' * (self.partpyobj.col - 1) + '^')
+        if self.partpymsg:
+            output.append(self.partpymsg)
 
         return '\n'.join(output)

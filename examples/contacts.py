@@ -1,6 +1,6 @@
-from __future__ import print_function
 """Matcher utilizes SourceString to provide some simple string matching
 functionality."""
+from __future__ import print_function
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
@@ -23,8 +23,8 @@ class ContactsParser(Matcher):
         """Run the parser over the entire sourestring and return the results."""
         try:
             return self.parse_top_level()
-        except PartpyError as e:
-            print(e)
+        except PartpyError as ex:
+            print(ex)
 
     def parse_top_level(self):
         """The top level parser will do a loop where it looks for a single
@@ -56,7 +56,7 @@ class ContactsParser(Matcher):
         self.parse_whitespace()
         # allow name and email to be delimited by either a ':' or '-'
         if not self.match_any_char(':-'):
-            raise PartpyError(self, 'Expecting : or -, found: ' + self.get_char())
+            raise PartpyError(self, 'Expecting : or -')
         self.eat_length(1)
         self.parse_whitespace()
 
