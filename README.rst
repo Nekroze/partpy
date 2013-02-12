@@ -18,10 +18,12 @@ most of the error handling process.
 Performance
 ===========
 
-``partpy`` is written with ``Cython`` support through decorators and
+``partpy`` is written with ``Cython`` support through .pxd files and
 can be compiled for extra speed. If you do not want to use ``Cython``
-you can strip away the ``Cython`` decorators and imports and have no
-more need for it.
+simply install it from the source with ``Cython`` uninstalled.
+
+If however you use ``pip`` or ``easy_install`` or something similar
+``Cython`` is marked a dependency and must be installed.
 
 Usage
 =====
