@@ -157,3 +157,20 @@ class SourceString(object):
             pos += 1
 
         return ''.join(output[:-1])
+
+
+class PartpyError(Exception):
+
+    def __init__(self, obj, msg = None):
+        self.partpyMsg = msg
+        self.partpyObj = obj
+
+    def __str__(self):
+        lines = self.obj.get_surrounding_lines(1, 0)
+        highlighter = ' ' * (self.obj.col - 1) + '^'
+
+        output = lines + '\n' + highlighter
+        if self.partpyMsg:
+            output += '\n' + self.partpyMsg
+
+        return output
