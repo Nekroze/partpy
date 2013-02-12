@@ -6,6 +6,7 @@ setup.py
 partpy/__init__.py
 partpy/fpattern.py
 partpy/matcher.py
+partpy/partpyerror.py
 partpy/sourcestring.py
 partpy/spattern.py
 test/test_examples_contacts.py

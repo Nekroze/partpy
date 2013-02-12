@@ -1,10 +1,15 @@
-"""Custom exception for classes inheriting SourceString."""
+"""Custom exception for classes inheriting SourceString or Matcher."""
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
 
 class PartpyError(Exception):
+    """Takes a SourceString or Matcher derived object and an optional message.
 
+    When converted to a string will display the previous and current line
+    with line numbers and a '^' under the current position of the object with
+    the optional message on the following line.
+    """
     def __init__(self, obj, msg = None):
         self.partpyMsg = msg
         self.partpyObj = obj
