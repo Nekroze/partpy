@@ -3,6 +3,7 @@ LICENSE.txt
 README.rst
 partcy.py
 setup.py
+tox.ini
 partpy/__init__.py
 partpy/fpattern.py
 partpy/matcher.py
