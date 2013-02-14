@@ -108,7 +108,7 @@ class Matcher(SourceString):
         number of spaces in a row from the current position."""
         spaces = 0
         indents = 0
-        for char in self.string[self.pos:]:
+        for char in self.string[self.pos - self.col:]:
             if char == ' ':
                 spaces += 1
             elif tabs and char == '\t':
@@ -130,7 +130,7 @@ class Matcher(SourceString):
         spaces = 0
         indents = 0
         charlen = 0
-        for char in self.string[self.pos:]:
+        for char in self.string[self.pos - self.col:]:
             if char == ' ':
                 spaces += 1
             elif tabs and char == '\t':
