@@ -59,11 +59,11 @@ class SourceString(object):
             return None
 
         for char in self.string[self.pos:self.pos + length]:
-            if char == '\n':  # handle a newline char
-                self.col = -1
-                self.row += 1
             self.col += 1
             self.pos += 1
+            if char == '\n':  # handle a newline char
+                self.col = 0
+                self.row += 1
 
         if not self.has_space():  # Set eos if there is no more space left.
             self.eos = 1
@@ -74,11 +74,11 @@ class SourceString(object):
             return None
 
         for char in string:
-            if char == '\n':  # handle a newline char
-                self.col = -1
-                self.row += 1
             self.col += 1
             self.pos += 1
+            if char == '\n':  # handle a newline char
+                self.col = 0
+                self.row += 1
 
         if not self.has_space():  # Set eos if there is no more space left.
             self.eos = 1
@@ -160,6 +160,22 @@ class SourceString(object):
             return None
 
         return SourceLine(''.join(output) + '\n', self.row)
+
+    def get_all_lines(self):
+        """Return all lines of the SourceString as a list of SourceLine's."""
+        output = []
+        line = []
+        lineno = 0
+        for char in self.string:
+            line.append(char)
+            if char == '\n':
+                output.append(SourceLine(''.join(line), lineno))
+                line = []
+                lineno += 1
+        if line:
+            output.append(SourceLine(''.join(line), lineno))
+
+        return output
 
     def get_lines(self, first, last):
         """Return SourceLines for lines between and including first and last."""

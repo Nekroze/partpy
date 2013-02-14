@@ -76,6 +76,13 @@ class Test_SourceString(unittest.TestCase):
         SRC.eat_length(5)
         self.assertTrue(SRC.eos)
 
+    def test_get_line(self):
+        SRC = SourceString('hello\nworld\nthis\nis\na\ntest')
+
+        self.assertEqual(repr(SRC.get_line(0)), 'hello\n')
+        self.assertEqual(repr(SRC.get_line(2)), 'this\n')
+        self.assertEqual(SRC.get_line(20), None)
+
     def test_get_current_line(self):
         SRC = SourceString('hello\nworld\nthis\nis\na\ntest')
 
@@ -83,12 +90,31 @@ class Test_SourceString(unittest.TestCase):
         SRC.eat_string('hello\n')
         self.assertEqual(repr(SRC.get_current_line()), 'world\n')
 
-    def test_get_line(self):
+    def test_get_lines(self):
         SRC = SourceString('hello\nworld\nthis\nis\na\ntest')
 
-        self.assertEqual(repr(SRC.get_line(0)), 'hello\n')
-        self.assertEqual(repr(SRC.get_line(2)), 'this\n')
-        self.assertEqual(SRC.get_line(20), None)
+        lines = [str(x) for x in SRC.get_lines(0, 1)]
+        self.assertEqual(lines, ['0   |hello\n', '1   |world\n'])
+        lines = ''.join([repr(x) for x in SRC.get_lines(0, 1)])
+        self.assertEqual(lines, 'hello\nworld\n')
+
+        lines = [str(x) for x in SRC.get_lines(4, 5)]
+        self.assertEqual(lines, ['4   |a\n', '5   |test'])
+        lines = ''.join([repr(x) for x in SRC.get_lines(4, 5)])
+        self.assertEqual(lines, 'a\ntest')
+
+        self.assertEqual(SRC.get_lines(10, 20), None)
+
+    def test_get_all_lines(self):
+        base = 'hello\nworld\nthis\nis\na\ntest'
+        SRC = SourceString(base)
+
+        lines = [str(x) for x in SRC.get_all_lines()]
+        expected = ['0   |hello\n', '1   |world\n', '2   |this\n', '3   |is\n',
+            '4   |a\n', '5   |test']
+        self.assertEqual(lines, expected)
+        lines = ''.join([repr(x) for x in SRC.get_all_lines()])
+        self.assertEqual(lines, base)
 
     def test_get_surrounding_lines(self):
         SRC = SourceString('hello\nworld\nthis\nis\na\ntest')
@@ -115,21 +141,6 @@ class Test_SourceString(unittest.TestCase):
         self.assertEqual(lines, ['4   |a\n', '5   |test'])
         lines = ''.join([repr(x) for x in SRC.get_surrounding_lines()])
         self.assertEqual(lines, 'a\ntest')
-
-    def test_get_lines(self):
-        SRC = SourceString('hello\nworld\nthis\nis\na\ntest')
-
-        lines = [str(x) for x in SRC.get_lines(0, 1)]
-        self.assertEqual(lines, ['0   |hello\n', '1   |world\n'])
-        lines = ''.join([repr(x) for x in SRC.get_lines(0, 1)])
-        self.assertEqual(lines, 'hello\nworld\n')
-
-        lines = [str(x) for x in SRC.get_lines(4, 5)]
-        self.assertEqual(lines, ['4   |a\n', '5   |test'])
-        lines = ''.join([repr(x) for x in SRC.get_lines(4, 5)])
-        self.assertEqual(lines, 'a\ntest')
-
-        self.assertEqual(SRC.get_lines(10, 20), None)
 
     def test_match_string(self):
         MAT = SourceString('hello world\ntesting stuff')
