@@ -131,7 +131,7 @@ class SourceString(object):
             if pos == end:
                 break
 
-        return ''.join(output)
+        return SourceLine(''.join(output), self.row)
 
     def get_lines(self, past = 1, future = 1):
         """Return the current line and x,y previous and future lines."""
@@ -163,8 +163,13 @@ class SourceString(object):
     def __repr__(self):
         return self.string
 
-    def __str__(self):
-        return self.string
+    def __richcmp__(self, other, operator):
+        if operator == 2:
+            return self.string == other
+        elif operator == 3:
+            return self.string != other
+        else:
+            return False
 
 
 
