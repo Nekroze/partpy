@@ -55,25 +55,27 @@ class SourceString(object):
 
     def eat_length(self, length):
         """Move current position by length and set eos if not has_space()."""
-
-        self.col += length
-        self.pos += length
+        for char in self.string[self.pos:self.pos + length]:
+            if char == '\n':  # handle a newline char
+                self.col = -1
+                self.row += 1
+            self.col += 1
+            self.pos += 1
 
         if not self.has_space():  # Set eos if there is no more space left.
             self.eos = 1
 
     def eat_string(self, string):
         """Move current position by length of string and count lines by \n."""
-        if string == '\n':  # Handle single newline.
-            self.col = -1
-            self.row += 1
-            self.eat_length(1)
-        elif '\n' in string:  # Handle string containing a newline.
-            for char in string:  # Recursively call eat to handle each char.
-                self.eat_string(char)
-        else:
-            length = len(string)
-            self.eat_length(length)  # Any other string just eat the length.
+        for char in string:
+            if char == '\n':  # handle a newline char
+                self.col = -1
+                self.row += 1
+            self.col += 1
+            self.pos += 1
+
+        if not self.has_space():  # Set eos if there is no more space left.
+            self.eos = 1
 
     def get_char(self):
         """Return the current character in the working string."""
