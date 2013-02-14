@@ -53,6 +53,9 @@ Thanks!
 Changelog
 =========
 
+v0.2.1 - February 14th 2013
+ - Added examples directory to sdist
+
 v0.2.0 - February 14th 2013
  - Matcher merged into SourceString
  - new class SourceLine returned when dealing with specific SourceString lines

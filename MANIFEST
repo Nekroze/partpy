@@ -4,6 +4,8 @@ README.rst
 partcy.py
 setup.py
 tox.ini
+examples/__init__.py
+examples/contacts.py
 partpy/__init__.py
 partpy/fpattern.py
 partpy/partpyerror.py
