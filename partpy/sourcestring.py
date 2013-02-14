@@ -51,7 +51,7 @@ class SourceString(object):
 
     def has_space(self, length = 1):
         """Returns boolean if self.pos + length < working string length."""
-        return self.pos + length-1 < self.length
+        return self.pos + length - 1 < self.length
 
     def eat_length(self, length):
         """Move current position by length and set eos if not has_space()."""
@@ -90,26 +90,22 @@ class SourceString(object):
         if not self.has_space():
             return ''
 
-        pos = self.pos
-        distance = pos + length
         if not trim and not self.has_space(length):
             return ''
-        return self.string[pos:distance]
+        return self.string[self.pos:self.pos + length]
 
     def get_string(self):
         """Return non space chars from current position until a whitespace."""
         if not self.has_space():
             return ''
 
-        pos = self.pos
-        string = self.string
         # Get a char for each char in the current string from pos onward
         #  solong as the char is not whitespace.
         # The following is not yet supported with cython 0.18.0
         #from itertools import takewhile
         #chars = (y for y in takewhile(lambda x: not x.isspace(), string[pos:]))
         chars = []
-        for char in string[pos:]:
+        for char in self.string[self.pos:]:
             if char.isspace():
                 break
             else:
@@ -232,15 +228,15 @@ class SourceString(object):
     def match_any_string(self, strings, word = 0):
         """Attempts to match each string in strings in order of length.
         Will return the string that matches or an empty string if no match.
-        Sorts strings list by string length, consider immutability.
+        Sorts strings list by string length internally.
 
         if Word then only match if string is followed by a whitespace."""
-        current = ''
         if word:
             current = self.get_string()
-            return current if self.get_string() in strings else ''
+            return current if current in strings else ''
 
         strings = sorted(strings, key = len)
+        current = ''
 
         currentlength = 0
         length = 0

@@ -25,10 +25,9 @@ cdef class SourceString(object):
 
     cpdef str get_char(self)
 
-    @cy.locals(pos = cy.long, distance = cy.int)
     cpdef str get_length(self, int length, int trim = *)
 
-    @cy.locals(pos = cy.long, string = str, chars = list)
+    @cy.locals(chars = list)
     cpdef str get_string(self)
 
     cpdef str rest_of_string(self, int offset = *)
