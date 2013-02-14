@@ -67,6 +67,8 @@ class CleanUp(Command):
                     matches.append(os.path.join(root, filename))
                 for filename in fnmatch.filter(filenames, '*.so'):
                     matches.append(os.path.join(root, filename))
+                for filename in fnmatch.filter(filenames, '*.c'):
+                    matches.append(os.path.join(root, filename))
                 for dirname in fnmatch.filter(dirnames, '__pycache__'):
                     dirs.append(os.path.join(root, dirname))
 

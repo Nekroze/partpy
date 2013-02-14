@@ -1,10 +1,10 @@
-"""Matcher utilizes SourceString to provide some simple string matching
+"""SourceString utilizes SourceString to provide some simple string matching
 functionality."""
 from __future__ import print_function
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
-from partpy import Matcher
+from partpy import SourceString
 from partpy import PartpyError
 from partpy import spattern as spat
 
@@ -15,7 +15,7 @@ Some Random:randomkid@randomail.net
 EXPECTED = {'Taylor Nekroze Lawson': 'nekroze@eturnilnetwork.com',
                   'Some Random': 'randomkid@randomail.net'}
 
-class ContactsParser(Matcher):
+class ContactsParser(SourceString):
     """The contacts parser will simply look for name and website pairs
     while disregarding any kind of whitespace and store them in a dict.
     """
@@ -70,7 +70,7 @@ class ContactsParser(Matcher):
         a space, tab, newline.
         """
         while True:
-            char = self.get_char()  # get the current Matcher character.
+            char = self.get_char()  # get the current SourceString character.
             if not char.isspace():
                 break
             else:

@@ -16,13 +16,22 @@ class PartpyError(Exception):
         self.partpyobj = obj
 
     def __repr__(self):
-        lines = self.partpyobj.get_surrounding_lines(1, 0)
-        output = []
-        for line in lines:
-            output.append(str(line))
+        output = [str(line) for line in \
+            self.partpyobj.get_surrounding_lines(1, 0)]
 
-        output.append(' ' * (self.partpyobj.col - 1) + '^')
+        padding = 1
+        if self.partpyobj.row < 1000:
+            padding = 2
+        if self.partpyobj.row < 100:
+            padding = 3
+        if self.partpyobj.row < 10:
+            padding = 4
+
+        output.append(' ' * (self.partpyobj.col + padding + 1) + '^' + '\n')
         if self.partpymsg:
             output.append(self.partpymsg)
 
-        return '\n'.join(output)
+        return ''.join(output)
+
+    def __str__(self):
+        return self.__repr__()
