@@ -173,10 +173,8 @@ class SourceString(object):
         elif not linestrings:
             return None
 
-        lines = []
-        for num, line in enumerate(linestrings):
-            lines.append(SourceLine(line, first + num))
-        return lines
+        return [SourceLine(line, first + num) for num, line in \
+            enumerate(linestrings)]
 
     def get_surrounding_lines(self, past = 1, future = 1):
         """Return the current line and x,y previous and future lines.
