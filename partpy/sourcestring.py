@@ -55,6 +55,9 @@ class SourceString(object):
 
     def eat_length(self, length):
         """Move current position by length and set eos if not has_space()."""
+        if self.eos:
+            return None
+
         for char in self.string[self.pos:self.pos + length]:
             if char == '\n':  # handle a newline char
                 self.col = -1
@@ -67,6 +70,9 @@ class SourceString(object):
 
     def eat_string(self, string):
         """Move current position by length of string and count lines by \n."""
+        if self.eos:
+            return None
+
         for char in string:
             if char == '\n':  # handle a newline char
                 self.col = -1
