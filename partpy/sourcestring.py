@@ -118,8 +118,25 @@ class SourceString(object):
         """A copy of the current position till the end of the string."""
         return self.string[self.pos + offset:]
 
+    def get_line(self, lineno):
+        """Return any line as a SourceLine and None if lineno doesnt exist."""
+        line = 0
+        output = []
+        for char in self.string:
+            if line == lineno:
+                output.append(char)
+            elif line > lineno:
+                break
+
+            if char == '\n':
+                line += 1
+        if not output:
+            return None
+
+        return SourceLine(''.join(output), lineno)
+
     def get_current_line(self):
-        """Return the entirety of the current line."""
+        """Return a SourceLine of the current line."""
         pos = self.pos - self.col
         string = self.string
         end = self.length
@@ -130,11 +147,40 @@ class SourceString(object):
             pos += 1
             if pos == end:
                 break
+        if not output:
+            return None
 
-        return SourceLine(''.join(output), self.row)
+        return SourceLine(''.join(output) + '\n', self.row)
+
+    def get_lines(self, first, last):
+        """Return SourceLines for lines between and including first and last."""
+        line = 0
+        linestring = []
+        linestrings = []
+        for char in self.string:
+            if line >= first and line <= last:
+                linestring.append(char)
+                if char == '\n':
+                    linestrings.append(''.join(linestring))
+                    linestring = []
+            elif line > last:
+                break
+
+            if char == '\n':
+                line += 1
+        if linestring:
+            linestrings.append(''.join(linestring))
+        elif not linestrings:
+            return None
+
+        lines = []
+        for num, line in enumerate(linestrings):
+            lines.append(SourceLine(line, first + num))
+        return lines
 
     def get_surrounding_lines(self, past = 1, future = 1):
-        """Return the current line and x,y previous and future lines."""
+        """Return the current line and x,y previous and future lines.
+        Returns a list of SourceLine's"""
         string = self.string
         pos = self.pos - self.col
         end = self.length

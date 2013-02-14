@@ -36,6 +36,9 @@ cdef class SourceString(object):
 
     cpdef str rest_of_string(self, int offset = *)
 
+    @cy.locals(line = cy.long, output = list)
+    cpdef SourceLine get_line(self, long lineno)
+
     @cy.locals(pos = cy.int, string = str, end = cy.long, output = list)
     cpdef SourceLine get_current_line(self)
 
