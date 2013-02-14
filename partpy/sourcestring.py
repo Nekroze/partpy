@@ -118,7 +118,7 @@ class SourceString(object):
         """A copy of the current position till the end of the string."""
         return self.string[self.pos + offset:]
 
-    def get_line(self):
+    def get_current_line(self):
         """Return the entirety of the current line."""
         pos = self.pos - self.col
         string = self.string
@@ -133,11 +133,12 @@ class SourceString(object):
 
         return SourceLine(''.join(output), self.row)
 
-    def get_lines(self, past = 1, future = 1):
+    def get_surrounding_lines(self, past = 1, future = 1):
         """Return the current line and x,y previous and future lines."""
         string = self.string
         pos = self.pos - self.col
         end = self.length
+        row = self.row
 
         linesback = 0
         while linesback > -past:
@@ -148,51 +149,55 @@ class SourceString(object):
             pos -= 1
 
         output = []
+        linestring = []
         lines = future + 1
         while linesback < lines:
             if pos >= end:
-                output.append(string[pos - 1])
+                linestring.append(string[pos - 1])
+                output.append(
+                    SourceLine(''.join(linestring[:-1]), row + linesback))
                 break
             elif string[pos] == '\n':
+                linestring.append(string[pos])
+                pos += 1
+                output.append(
+                    SourceLine(''.join(linestring), row + linesback))
                 linesback += 1
-            output.append(string[pos])
+                linestring = []
+            linestring.append(string[pos])
             pos += 1
 
-        return ''.join(output[:-1])
+        return output
 
     def __repr__(self):
         return self.string
 
-    def __richcmp__(self, other, operator):
-        if operator == 2:
-            return self.string == other
-        elif operator == 3:
-            return self.string != other
-        else:
-            return False
-
-
 
 class SourceLine(SourceString):
+    """Contains an entire line of a source with handy line specific methods."""
 
     def __init__(self, string, lineno):
         super(SourceLine, self).__init__(string)
         self.lineno = lineno
 
     def strip_trailing_ws(self):
+        """Remove trailing whitespace from internal string."""
         self.string = self.string.rstrip()
 
     def get_first_char(self):
+        """Return the first non-whitespace character of the line."""
         for char in self.string:
             if not char.isspace():
                 return char
 
     def get_last_char(self):
+        """Return the last non-whitespace character of the line."""
         for char in reversed(self.string):
             if not char.isspace():
                 return char
 
-    def __repr__(self):
+    def __str__(self):
+        """Return a string of this line including linenumber."""
         lineno = self.lineno
         padding = 0
         if lineno < 1000:

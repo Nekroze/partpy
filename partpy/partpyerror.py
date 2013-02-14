@@ -15,20 +15,11 @@ class PartpyError(Exception):
         self.partpymsg = msg
         self.partpyobj = obj
 
-    def __str__(self):
+    def __repr__(self):
+        lines = self.partpyobj.get_surrounding_lines(1, 0)
         output = []
-        splitlines = self.partpyobj.get_lines(1, 0).split('\n')
-        start = self.partpyobj.row - len(splitlines) + 1
-        for line in splitlines:
-            padding = 0
-            if start < 1000:
-                padding = 1
-            if start < 100:
-                padding = 2
-            if start < 10:
-                padding = 3
-            output.append(str(start) + (' ' * padding) + '|' + line)
-            start += 1
+        for line in lines:
+            output.append(str(line))
 
         output.append(' ' * (self.partpyobj.col - 1) + '^')
         if self.partpymsg:

@@ -36,6 +36,19 @@ cdef class SourceString(object):
 
     cpdef str rest_of_string(self, int offset = *)
 
-    @cy.locals(output = list, string = str,
+    @cy.locals(pos = cy.int, string = str, end = cy.long, output = list)
+    cpdef SourceLine get_current_line(self)
+
+    @cy.locals(output = list, string = str, linestring = list, row = cy.int,
         end = cy.long, pos = cy.long, lines = cy.int, linesback = cy.int)
-    cpdef str get_lines(self, int past = *, int future = *)
+    cpdef list get_surrounding_lines(self, int past = *, int future = *)
+
+
+cdef class SourceLine(SourceString):
+    cdef public int lineno
+
+    cpdef strip_trailing_ws(self)
+
+    cpdef str get_first_char(self)
+
+    cpdef str get_last_char(self)

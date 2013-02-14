@@ -83,30 +83,40 @@ class Test_SourceString(unittest.TestCase):
         SRC.eat_length(5)
         self.assertTrue(SRC.eos)
 
-    def test_get_line(self):
+    def test_get_current_line(self):
         SRC = SourceString()
         SRC.set_string('hello\nworld\nthis\nis\na\ntest')
 
-        self.assertEqual(SRC.get_line(), 'hello')
+        self.assertEqual(SRC.get_current_line().string, 'hello')
         SRC.eat_string('hello\n')
-        self.assertEqual(SRC.get_line(), 'world')
+        self.assertEqual(SRC.get_current_line().string, 'world')
 
-    def test_get_lines(self):
+    def test_get_surrounding_lines(self):
         SRC = SourceString()
         SRC.set_string('hello\nworld\nthis\nis\na\ntest')
 
-        lines = SRC.get_lines()
-        self.assertEqual(lines, 'hello\nworld')
+        lines = [str(x) for x in SRC.get_surrounding_lines()]
+        self.assertEqual(lines, ['0   |hello\n', '1   |world\n'])
+
+        lines = ''.join([repr(x) for x in SRC.get_surrounding_lines()])
+        self.assertEqual(lines, 'hello\nworld\n')
 
         SRC.eat_string('hello\nworld\n')
-        lines = SRC.get_lines()
-        self.assertEqual(lines, 'world\nthis\nis')
 
-        lines = SRC.get_lines(1,0)
-        self.assertEqual(lines, 'world\nthis')
+        lines = [str(x) for x in SRC.get_surrounding_lines()]
+        self.assertEqual(lines, ['1   |world\n', '2   |this\n', '3   |is\n'])
+        lines = ''.join([repr(x) for x in SRC.get_surrounding_lines()])
+        self.assertEqual(lines, 'world\nthis\nis\n')
+
+        lines = [str(x) for x in SRC.get_surrounding_lines(1, 0)]
+        self.assertEqual(lines, ['1   |world\n', '2   |this\n'])
+        lines = ''.join([repr(x) for x in SRC.get_surrounding_lines(1, 0)])
+        self.assertEqual(lines, 'world\nthis\n')
 
         SRC.eat_string('this\nis\na\n')
-        lines = SRC.get_lines()
+        lines = [str(x) for x in SRC.get_surrounding_lines()]
+        self.assertEqual(lines, ['4   |a\n', '5   |test'])
+        lines = ''.join([repr(x) for x in SRC.get_surrounding_lines()])
         self.assertEqual(lines, 'a\ntest')
 
 
