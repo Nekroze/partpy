@@ -163,6 +163,9 @@ class SourceString(object):
     def __repr__(self):
         return self.string
 
+    def __str__(self):
+        return self.string
+
 
 
 class SourceLine(SourceString):
