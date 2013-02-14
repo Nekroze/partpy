@@ -157,3 +157,6 @@ class SourceString(object):
             pos += 1
 
         return ''.join(output[:-1])
+
+    def __repr__(self):
+        return self.string

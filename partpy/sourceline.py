@@ -23,3 +23,15 @@ class SourceLine(SourceString):
         for char in reversed(self.string):
             if not char.isspace():
                 return char
+
+    def __repr__(self):
+        lineno = self.lineno
+        padding = 0
+        if lineno < 1000:
+            padding = 1
+        if lineno < 100:
+            padding = 2
+        if lineno < 10:
+            padding = 3
+
+        return str(lineno) + (' ' * padding) + '|' + self.string
