@@ -105,7 +105,7 @@ class Matcher(SourceString):
 
     def count_indents(self, spacecount, tabs = 0):
         """Counts the number of indents that can be tabs or spacecount
-        number of spaces in a row."""
+        number of spaces in a row from the current position."""
         spaces = 0
         indents = 0
         for char in self.string[self.pos:]:
@@ -123,7 +123,7 @@ class Matcher(SourceString):
 
     def count_indents_length(self, spacecount, tabs = 0):
         """Counts the number of indents that can be tabs or spacecount
-        number of spaces in a row.
+        number of spaces in a row from the current position.
 
         Also returns the character length of the indents.
         """
