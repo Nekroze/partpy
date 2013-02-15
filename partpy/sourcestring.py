@@ -412,6 +412,26 @@ class SourceString(object):
                 spaces = 0
         return (indents, charlen)
 
+    def count_indents_last_line(self, spacecount, tabs = 0, back = 5):
+        """Finds the last meaningful line and returns its indent level."""
+        lines = self.get_surrounding_lines(back, 0)
+
+        for line in reversed(lines):
+            if not line.string.isspace():
+                return line.count_indents(spacecount, tabs)
+        return 0
+
+    def count_indents_length_last_line(self, spacecount, tabs = 0, back = 5):
+        """Finds the last meaningful line and returns its indent level and
+        character length.
+        """
+        lines = self.get_surrounding_lines(back, 0)
+
+        for line in reversed(lines):
+            if not line.string.isspace():
+                return line.count_indents_length(spacecount, tabs)
+        return (0, 0)
+
     def skip_whitespace(self, newlines = 0):
         """Moves the position forwards to the next non newline space character.
         If newlines >= 1 include newlines as spaces.

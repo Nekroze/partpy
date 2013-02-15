@@ -72,6 +72,12 @@ cdef class SourceString(object):
     @cy.locals(indents = cy.int, spaces = cy.int, charlen = cy.int, char = str)
     cpdef tuple count_indents_length(self, int spacecount, int tabs = *)
 
+    @cy.locals(lines = list, line = SourceLine)
+    cpdef count_indents_last_line(self, int spacecount, int tabs = *, int back = *)
+
+    @cy.locals(lines = list, line = SourceLine)
+    cpdef count_indents_length_last_line(self, int spacecount, int tabs = *,  int back = *)
+
     @cy.locals(char = str)
     cpdef skip_whitespace(self, int newlines = *)
 

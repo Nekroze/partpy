@@ -197,6 +197,24 @@ class Test_SourceString(unittest.TestCase):
         self.assertEqual(MAT.count_indents_length(2, 1), (2, 3))
         self.assertEqual(MAT.count_indents_length(2), (1, 2))
 
+    def test_count_indents_last_line(self):
+        MAT = SourceString('Test100\n  test\n  more')
+
+        self.assertEqual(MAT.count_indents_last_line(2), 0)
+        MAT.eat_length(8)
+        self.assertEqual(MAT.count_indents_last_line(2), 0)
+        MAT.eat_length(7)
+        self.assertEqual(MAT.count_indents_last_line(2), 1)
+
+    def test_count_indents_length_last_line(self):
+        MAT = SourceString('Test100\n  test\n  more')
+
+        self.assertEqual(MAT.count_indents_length_last_line(2), (0, 0))
+        MAT.eat_length(8)
+        self.assertEqual(MAT.count_indents_length_last_line(2), (0, 0))
+        MAT.eat_length(7)
+        self.assertEqual(MAT.count_indents_length_last_line(2), (1, 2))
+
     def test_skip_whitespace(self):
         MAT = SourceString('  \tTest100')
         MAT2 = SourceString('  \nTest100')
