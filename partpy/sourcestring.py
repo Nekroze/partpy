@@ -275,14 +275,18 @@ class SourceString(object):
         current = self.string[self.pos]
         return current if current in chars else ''
 
-    def match_pattern(self, first, rest = None):
+    def match_pattern(self, first, rest = None, least = 1):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
         First may be a list or tuple that will get unpacked to first, rest.
 
+        Integer argument least defines and minimum amount of chars that can
+        be matched.
+
         If rest is defined then first is used only to match the first arg
-        and the rest of the chars are matched against rest."""
+        and the rest of the chars are matched against rest.
+        """
         ftype = type(first)
         if rest is None and ftype in (tuple, list):
             first, rest = first
@@ -299,20 +303,28 @@ class SourceString(object):
                 output.append(char)
             else:
                 break
+
+        if len(output) < least:
+            return ''
+
         return ''.join(output)
 
-    def match_function(self, first, rest = None):
+    def match_function(self, first, rest = None, least = 1):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
         First may be a list or tuple that will get unpacked to first, rest.
+
+        Integer argument least defines and minimum amount of chars that can
+        be matched.
 
         This version takes functions instead of string patterns.
         Each function must take one argument, a string, and return a
         value that can be evauluated as True or False.
 
         If rest is defined then first is used only to match the first arg
-        and the rest of the chars are matched against rest."""
+        and the rest of the chars are matched against rest.
+        """
         ftype = type(first)
         if rest is None and ftype in (tuple, list):
             first, rest = first
@@ -329,6 +341,10 @@ class SourceString(object):
                 output.append(char)
             else:
                 break
+
+        if len(output) < least:
+            return ''
+
         return ''.join(output)
 
     def count_indents(self, spacecount, tabs = 0):

@@ -197,6 +197,13 @@ class Test_SourceString(unittest.TestCase):
         self.assertEqual(MAT.count_indents_length(2, 1), (2, 3))
         self.assertEqual(MAT.count_indents_length(2), (1, 2))
 
+    def test_iterator(self):
+        string = 'nekroze'
+        MAT = SourceString(string)
+
+        for i, char in enumerate(MAT):
+            self.assertEqual(string[i], char)
+
 
 if __name__ == "__main__":
     unittest.main()
