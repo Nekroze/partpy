@@ -101,6 +101,8 @@ class SourceString(object):
 
     def eat_line(self):
         """Move current position forward until the next line."""
+        if self.eos:
+            return None
         eat_length = self.eat_length
         get_char = self.get_char
         has_space = self.has_space
