@@ -197,6 +197,18 @@ class Test_SourceString(unittest.TestCase):
         self.assertEqual(MAT.count_indents_length(2, 1), (2, 3))
         self.assertEqual(MAT.count_indents_length(2), (1, 2))
 
+    def test_skip_whitespace(self):
+        MAT = SourceString('  \tTest100')
+        MAT2 = SourceString('  \nTest100')
+
+        MAT.skip_whitespace()
+        self.assertEqual(MAT.get_char(), 'T')
+
+        MAT2.skip_whitespace()
+        self.assertEqual(MAT2.get_char(), '\n')
+        MAT2.skip_whitespace(1)
+        self.assertEqual(MAT2.get_char(), 'T')
+
     def test_iterator(self):
         string = 'nekroze'
         MAT = SourceString(string)

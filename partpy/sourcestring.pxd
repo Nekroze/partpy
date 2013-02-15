@@ -72,6 +72,9 @@ cdef class SourceString(object):
     @cy.locals(indents = cy.int, spaces = cy.int, charlen = cy.int, char = str)
     cpdef tuple count_indents_length(self, int spacecount, int tabs = *)
 
+    @cy.locals(char = str)
+    cpdef skip_whitespace(self, int newlines = *)
+
 
 cdef class SourceLine(SourceString):
     cdef public int lineno

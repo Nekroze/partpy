@@ -410,6 +410,25 @@ class SourceString(object):
                 spaces = 0
         return (indents, charlen)
 
+    def skip_whitespace(self, newlines = 0):
+        """Moves the position forwards to the next non newline space character.
+        If newlines >= 1 include newlines as spaces.
+        """
+        if newlines:
+            while not self.eos:
+                if self.get_char().isspace():
+                    self.eat_length(1)
+                else:
+                    break
+        else:
+            char = ''
+            while not self.eos:
+                char = self.get_char()
+                if char.isspace() and char != '\n':
+                    self.eat_length(1)
+                else:
+                    break
+
     def __repr__(self):
         return self.string
 
