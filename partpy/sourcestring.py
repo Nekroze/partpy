@@ -55,30 +55,44 @@ class SourceString(object):
 
     def eat_length(self, length):
         """Move current position by length and set eos if not has_space()."""
-        if self.eos:
+        pos = self.pos
+        if self.eos or pos + length > self.length:
             return None
 
-        for char in self.string[self.pos:self.pos + length]:
-            self.col += 1
-            self.pos += 1
+        col = self.col
+        row = self.row
+        for char in self.string[pos:pos + length]:
+            col += 1
+            pos += 1
             if char == '\n':  # handle a newline char
-                self.col = 0
-                self.row += 1
+                col = 0
+                row += 1
+
+        self.pos = pos
+        self.col = col
+        self.row = row
 
         if not self.has_space():  # Set eos if there is no more space left.
             self.eos = 1
 
     def eat_string(self, string):
         """Move current position by length of string and count lines by \n."""
-        if self.eos:
+        pos = self.pos
+        if self.eos or pos + len(string) > self.length:
             return None
 
+        col = self.col
+        row = self.row
         for char in string:
-            self.col += 1
-            self.pos += 1
+            col += 1
+            pos += 1
             if char == '\n':  # handle a newline char
-                self.col = 0
-                self.row += 1
+                col = 0
+                row += 1
+
+        self.pos = pos
+        self.col = col
+        self.row = row
 
         if not self.has_space():  # Set eos if there is no more space left.
             self.eos = 1
@@ -93,12 +107,12 @@ class SourceString(object):
     def get_length(self, length, trim = 0):
         """Return string at current position + length.
         If trim == true then get as much as possible before eos"""
-        if not self.has_space():
+        if trim and not self.has_space(length):
+            return self.string[self.pos:]
+        elif self.has_space(length):
+            return self.string[self.pos:self.pos + length]
+        else:
             return ''
-
-        if not trim and not self.has_space(length):
-            return ''
-        return self.string[self.pos:self.pos + length]
 
     def get_string(self):
         """Return non space chars from current position until a whitespace."""
@@ -125,7 +139,10 @@ class SourceString(object):
 
     def rest_of_string(self, offset = 0):
         """A copy of the current position till the end of the string."""
-        return self.string[self.pos + offset:]
+        if self.has_space(offset):
+            return self.string[self.pos + offset:]
+        else:
+            return ''
 
     def get_line(self, lineno):
         """Return any line as a SourceLine and None if lineno doesnt exist."""
@@ -156,26 +173,13 @@ class SourceString(object):
             pos += 1
             if pos == end:
                 break
+        else:
+            output.append(string[pos])
+
         if not output:
             return None
 
-        return SourceLine(''.join(output) + '\n', self.row)
-
-    def get_all_lines(self):
-        """Return all lines of the SourceString as a list of SourceLine's."""
-        output = []
-        line = []
-        lineno = 0
-        for char in self.string:
-            line.append(char)
-            if char == '\n':
-                output.append(SourceLine(''.join(line), lineno))
-                line = []
-                lineno += 1
-        if line:
-            output.append(SourceLine(''.join(line), lineno))
-
-        return output
+        return SourceLine(''.join(output), self.row)
 
     def get_lines(self, first, last):
         """Return SourceLines for lines between and including first and last."""
@@ -198,7 +202,7 @@ class SourceString(object):
         elif not linestrings:
             return None
 
-        return [SourceLine(line, first + num) for num, line in \
+        return [SourceLine(lineno, first + num) for num, lineno in \
             enumerate(linestrings)]
 
     def get_surrounding_lines(self, past = 1, future = 1):
@@ -238,6 +242,22 @@ class SourceString(object):
 
         return output
 
+    def get_all_lines(self):
+        """Return all lines of the SourceString as a list of SourceLine's."""
+        output = []
+        line = []
+        lineno = 0
+        for char in self.string:
+            line.append(char)
+            if char == '\n':
+                output.append(SourceLine(''.join(line), lineno))
+                line = []
+                lineno += 1
+        if line:
+            output.append(SourceLine(''.join(line), lineno))
+
+        return output
+
     def match_string(self, string, word = 0):
         """Returns 1 if string can be matches against SourceString's
         current position.
@@ -272,6 +292,8 @@ class SourceString(object):
 
     def match_any_char(self, chars):
         """Match and return the current SourceString char if its in chars."""
+        if not self.has_space():
+            return ''
         current = self.string[self.pos]
         return current if current in chars else ''
 

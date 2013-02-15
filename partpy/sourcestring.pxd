@@ -1,7 +1,7 @@
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
-import cython as cy
+cimport cython as cy
 
 
 cdef class SourceString(object):
@@ -19,53 +19,57 @@ cdef class SourceString(object):
 
     cpdef int has_space(self, int length = *)
 
+    @cy.locals(pos = cy.long, col = cy.int, row = cy.long, char = str)
     cpdef eat_length(self, int length)
 
+    @cy.locals(pos = cy.long, col = cy.int, row = cy.long, char = str)
     cpdef eat_string(self, str string)
 
     cpdef str get_char(self)
 
     cpdef str get_length(self, int length, int trim = *)
 
-    @cy.locals(chars = list)
+    @cy.locals(chars = list, char = str)
     cpdef str get_string(self)
 
     cpdef str rest_of_string(self, int offset = *)
 
-    @cy.locals(line = cy.long, output = list)
+    @cy.locals(line = cy.long, output = list, char = str)
     cpdef SourceLine get_line(self, long lineno)
-
-    @cy.locals(linestring = list, linestrings = list, output = list)
-    cpdef list get_lines(self, first, last)
-
-    @cy.locals(output = list, line = list, lineno = cy.long)
-    cpdef list get_all_lines(self)
 
     @cy.locals(pos = cy.int, string = str, end = cy.long, output = list)
     cpdef SourceLine get_current_line(self)
 
-    @cy.locals(output = list, string = str, linestring = list, row = cy.int,
-        end = cy.long, pos = cy.long, lines = cy.int, linesback = cy.int)
+    @cy.locals(linestring = list, linestrings = list, output = list, char = str,
+        line = cy.long)
+    cpdef list get_lines(self, first, last)
+
+    @cy.locals(string = str, pos = cy.long, end = cy.long, row = cy.int,
+        linesback = cy.int, output = list, linestring = list, lines = cy.int)
     cpdef list get_surrounding_lines(self, int past = *, int future = *)
+
+    @cy.locals(output = list, line = list, lineno = cy.long, char = str)
+    cpdef list get_all_lines(self)
 
     cpdef int match_string(self, str string, int word = *)
 
-    @cy.locals(length = cy.int, currentlength = cy.int, current = str)
-    cpdef str match_any_string(self, strings, int word = *)
+    @cy.locals(length = cy.int, currentlength = cy.int, current = str,
+    string = str)
+    cpdef str match_any_string(self, list strings, int word = *)
 
     @cy.locals(current = str)
     cpdef str match_any_char(self, str chars)
 
-    @cy.locals(pattern = str, output = list, firstchar = str)
+    @cy.locals(pattern = str, output = list, firstchar = str, char = str)
     cpdef str match_pattern(self, first, str rest = ?, int least = *)
 
-    @cy.locals(output = list, firstchar = str)
+    @cy.locals(output = list, firstchar = str, char = str)
     cpdef str match_function(self, first, rest = ?, int least = *)
 
-    @cy.locals(indents = cy.int, spaces = cy.int)
+    @cy.locals(indents = cy.int, spaces = cy.int, char = str)
     cpdef int count_indents(self, int spacecount, int tabs = *)
 
-    @cy.locals(indents = cy.int, spaces = cy.int, charlen = cy.int)
+    @cy.locals(indents = cy.int, spaces = cy.int, charlen = cy.int, char = str)
     cpdef tuple count_indents_length(self, int spacecount, int tabs = *)
 
 
@@ -74,6 +78,8 @@ cdef class SourceLine(SourceString):
 
     cpdef strip_trailing_ws(self)
 
+    @cy.locals(char = str)
     cpdef str get_first_char(self)
 
+    @cy.locals(char = str)
     cpdef str get_last_char(self)
