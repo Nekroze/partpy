@@ -375,6 +375,27 @@ class SourceString(object):
     def __repr__(self):
         return self.string
 
+    def __getitem__(self, index):
+        return self.string[index]
+
+    def __delitem__(self, index):
+        del self.string[index]
+
+    def __setitem__(self, index, value):
+        self.string[index] = value
+
+    def __len__(self):
+        return len(self.string)
+
+    def __contains__(self, string):
+        return string in self.string
+
+    def __iter__(self):
+        """Yields the current char and moves the position onwards until eos."""
+        string = self.string
+        while not self.eos:
+            yield string[self.pos]
+            self.eat_length(1)
 
 class SourceLine(SourceString):
     """Contains an entire line of a source with handy line specific methods."""
