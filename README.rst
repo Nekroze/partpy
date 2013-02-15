@@ -54,7 +54,7 @@ Changelog
 =========
 
 v0.3.0
- - Added SourceString methods::
+ - Added SourceString methods:
      - eat_line
      - count_indents_last_line
      - count_indents_length_last_line
