@@ -99,6 +99,15 @@ class SourceString(object):
         if not self.has_space():  # Set eos if there is no more space left.
             self.eos = 1
 
+    def eat_line(self):
+        """Move current position forward until the next line."""
+        eat_length = self.eat_length
+        get_char = self.get_char
+        has_space = self.has_space
+        while has_space() and get_char() != '\n':
+            eat_length(1)
+        eat_length(1)
+
     def get_char(self):
         """Return the current character in the working string."""
         if not self.has_space():

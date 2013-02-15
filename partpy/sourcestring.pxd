@@ -25,6 +25,8 @@ cdef class SourceString(object):
     @cy.locals(pos = cy.long, col = cy.int, row = cy.long, char = str)
     cpdef eat_string(self, str string)
 
+    cpdef eat_line(self)
+
     cpdef str get_char(self)
 
     cpdef str get_length(self, int length, int trim = *)

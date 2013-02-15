@@ -45,6 +45,19 @@ class Test_SourceString(unittest.TestCase):
         self.assertEqual(SRC.col, 5)
         self.assertEqual(SRC.get_char(), '')
 
+    def test_eat_line(self):
+        SRC = SourceString('hello\nworld')
+
+        SRC.eat_line()
+        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.col, 0)
+        self.assertEqual(SRC.get_char(), 'w')
+
+        SRC.eat_line()
+        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.col, 5)
+        self.assertEqual(SRC.get_char(), '')
+
     def test_get_length(self):
         SRC = SourceString('hello world')
 
