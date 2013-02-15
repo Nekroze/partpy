@@ -27,7 +27,8 @@ class PartpyError(Exception):
         if self.partpyobj.row < 10:
             padding = 4
 
-        output.append(' ' * (self.partpyobj.col + padding + 1) + '^' + '\n')
+        output.append('\n' + \
+            (' ' * (self.partpyobj.col + padding + 1)) + '^' + '\n')
         if self.partpymsg:
             output.append(self.partpymsg)
 

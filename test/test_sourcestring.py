@@ -209,6 +209,62 @@ class Test_SourceString(unittest.TestCase):
         MAT2.skip_whitespace(1)
         self.assertEqual(MAT2.get_char(), 'T')
 
+    def test_retrieve_tokens(self):
+        expected = [('identifier', 'key'), ('comma', ','),
+            ('identifier', 'value')]
+        MAT = SourceString('key, \n    value')
+        tokens = {'identifier': str.isalpha, 'comma': lambda x: x == ','}
+
+        geny = MAT.retrieve_tokens(MAT.match_function, tokens)
+        for i, token in enumerate(geny):
+            self.assertEqual(expected[i], token)
+
+        from partpy.spattern import identifier, qualified
+        MAT = SourceString('key, \n    value.test')
+        tokens = {'identifier': identifier, 'comma': ',', 'qualified': qualified}
+        expected = [('identifier', 'key'), ('comma', ','),
+            ('qualified', 'value.test')]
+
+        geny = MAT.retrieve_tokens(MAT.match_pattern, tokens)
+        for i, token in enumerate(geny):
+            self.assertEqual(expected[i], token)
+
+    def test_retrieve_tokens_newlines(self):
+        expected = [('identifier', 'key'), ('comma', ','), ('nl', '\n'),
+            ('identifier', 'value')]
+        MAT = SourceString('key, \n    value')
+        tokens = {'identifier': str.isalpha, 'comma': lambda x: x == ',',
+            'nl': lambda x: x == '\n'}
+
+        geny = MAT.retrieve_tokens(MAT.match_function, tokens, newlines = 0)
+        for i, token in enumerate(geny):
+            self.assertEqual(expected[i], token)
+
+        from partpy.spattern import alpha
+        MAT.reset_position()
+        tokens = {'identifier': alpha, 'comma': ',', 'nl': '\n'}
+
+        geny = MAT.retrieve_tokens(MAT.match_pattern, tokens, newlines = 0)
+        for i, token in enumerate(geny):
+            self.assertEqual(expected[i], token)
+
+    def test_retrieve_tokens_longest(self):
+        MAT = SourceString('test101')
+        expected = [('identifier', 'test101')]
+        from partpy.spattern import alpha, identifier, number
+        tokens = {'word': alpha, 'identifier': identifier, 'number': number}
+
+        geny = MAT.retrieve_tokens(MAT.match_pattern, tokens)
+        for i, token in enumerate(geny):
+            self.assertEqual(expected[i], token)
+
+        MAT.reset_position()
+        expected = [('word', 'test'), ('number', '101')]
+        geny = MAT.retrieve_tokens(MAT.match_pattern, tokens, longest = 0)
+        for i, token in enumerate(geny):
+            self.assertEqual(expected[i], token)
+
+
     def test_iterator(self):
         string = 'nekroze'
         MAT = SourceString(string)

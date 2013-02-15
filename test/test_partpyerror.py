@@ -8,7 +8,7 @@ class Test(unittest.TestCase):
     def test_pretty_output(self):
         SRC = SourceString('hello\nworld\nthis\nis\na\ntest')
 
-        expected = '0   |hello\n     ^\nError[101]'
+        expected = '0   |hello\n\n     ^\nError[101]'
         string = repr(PartpyError(SRC, 'Error[101]'))
         self.assertEqual(string, expected)
 

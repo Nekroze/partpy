@@ -5,6 +5,8 @@ for matching strings and patterns.
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
+from .partpyerror import PartpyError
+
 
 class SourceString(object):
     """Stores the parse string and its length followed by current position
@@ -428,6 +430,41 @@ class SourceString(object):
                     self.eat_length(1)
                 else:
                     break
+
+    def retrieve_tokens(self, matcher, tokens, longest = 1, newlines = 1):
+        """Moves through SourceString and attempts to match and yield tokens
+        while skipping over whitespace and newlines unless newlines == 0.
+        Uses the longest match by default set longest to 0 to match shortest.
+        The matcher argument is either match_pattern or match_function.
+
+        Currently yield is not supported by cython so this function is
+        un-optimized but is still compiled. As such this could use more pure
+        python optimizations.
+        """
+        matches = {}
+        ordered = []
+        matched = ''
+        index = -1 if longest else 0
+
+        while not self.eos:
+            self.skip_whitespace(newlines)
+            for token, pattern in tokens.items():
+                matched = matcher(pattern)
+                if matched:
+                    matches[matched] = token
+
+            if len(matches):
+                ordered = sorted(matches.keys(), key = len)
+                match = ordered[index]
+                yield (matches[match], match)
+                self.eat_length(len(match))
+            else:
+                raise PartpyError(self, 'No token pattern for current char.')
+            matched = ''
+            matches = {}
+            match = ''
+            ordered = []
+
 
     def __repr__(self):
         return self.string
