@@ -16,8 +16,9 @@ class PartpyError(Exception):
         self.partpyobj = obj
 
     def __repr__(self):
-        output = [str(line) for line in \
-            self.partpyobj.get_surrounding_lines(1, 0)]
+        output = ['\n']
+        output.extend([str(line) for line in \
+            self.partpyobj.get_surrounding_lines(1, 0)])
 
         padding = 1
         if self.partpyobj.row < 1000:
