@@ -15,60 +15,7 @@ the language design, recognition and whatever else you need to do
 without having to figure out how string matching should be done or
 most of the error handling process.
 
-Performance
-===========
+Documentation & Usage
+=====================
 
-``partpy`` is written with ``Cython`` support through .pxd files and
-can be compiled for extra speed. If you do not want to use ``Cython``
-simply install it from the source with ``Cython`` uninstalled.
-
-If however you use ``pip`` or ``easy_install`` or something similar
-``Cython`` is marked a dependency and must be installed.
-
-Usage
-=====
-
-There are tutorials and information on how to use ``partpy`` at
-http://github.com/Nekroze/partpy/wiki and the main GitHub repository
-contains an examples directory that are tested for correctness each
-release so they will always be up to date. Also many examples for
-how each feature is used can be seen in the test directory at github
-and also shows the expected output of each test.
-
-
-Feedback
-========
-If you have any suggestions or questions about ``partpy`` feel free
-to email me at nekroze@eturnilnetwork.com.
-
-You can check out more of what I am doing at
-http://nekroze.eturnilnetwork.com my blog.
-
-If you encounter any errors or problems with ``partpy``, please let me
-know! Open an Issue at the GitHub http://github.com/Nekroze/partpy
-main repository.
-
-Thanks!
-
-Changelog
-=========
-
-v0.3.0
- - Added SourceString methods:
-     - eat_line
-     - count_indents_last_line
-     - count_indents_length_last_line
-     - skip_whitespace
-     - get_all_lines
-     - retrieve_tokens
- - Added least argument to SourceString.match_(pattern/function) for minimum length of match
- - SourceString.eat_length now handles newlines automatically
- - Some source code cleanups and cython fixes/optimizations
- - All SourceString.eat_* methods nolonger function when SourceString.eos = 1
-
-v0.2.1 - February 14th 2013
- - Added examples directory to sdist
-
-v0.2.0 - February 14th 2013
- - Matcher merged into SourceString
- - new class SourceLine returned when dealing with specific SourceString lines
+All documentation and usage information is hosted at http://partpy.readthedocs.org

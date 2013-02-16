@@ -1,10 +1,10 @@
 partpy Package
 ==============
 
-:mod:`fpattern` Module
-----------------------
+:mod:`sourcestring` Module
+--------------------------
 
-.. automodule:: partpy.fpattern
+.. automodule:: partpy.sourcestring
     :members:
     :undoc-members:
     :show-inheritance:
@@ -17,14 +17,6 @@ partpy Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`sourcestring` Module
---------------------------
-
-.. automodule:: partpy.sourcestring
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`spattern` Module
 ----------------------
 
@@ -33,3 +25,10 @@ partpy Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`fpattern` Module
+----------------------
+
+.. automodule:: partpy.fpattern
+    :members:
+    :undoc-members:
+    :show-inheritance:
