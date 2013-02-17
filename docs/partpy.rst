@@ -8,7 +8,6 @@ partpy Package
     :members:
     :undoc-members:
     :show-inheritance:
-    :special-members:
     :private-members:
 
 :mod:`partpyerror` Module
