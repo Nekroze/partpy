@@ -1,4 +1,15 @@
-"""Predefined function patterns for use in Matcher.match_function methods."""
+"""Predefined function patterns for use in Matcher.match_function methods.
+
+Defines the following:
+    - alphal = lower case alphabet
+    - alphau = upper case alphabet
+    - alpha = lower and upper case alphabet
+    - number = digits
+    - alnum = digits or lower and upper case alphabet
+    - identifier = first(alpha) rest(alnum | '_')
+    - qualified = first(alpha) rest(alnum | '.')
+    - integer = first(number | '-') rest(number)
+"""
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
@@ -9,15 +20,15 @@ alpha = str.isalpha
 number = str.isdigit
 alnum = str.isalnum
 
-def _identifier_first(char):
-    return alpha(char) or char == '_'
+def _identifier_rest(char):
+    return alnum(char) or char == '_'
 
-identifier = (_identifier_first, alnum)
+identifier = (alpha, _identifier_rest)
 
 def _qualified_rest(char):
-    return alpha(char) or char == '.'
+    return alnum(char) or char == '.'
 
-qualified = (_identifier_first, _qualified_rest)
+qualified = (alpha, _qualified_rest)
 
 def _integer_first(char):
     return number(char) or char == '-'

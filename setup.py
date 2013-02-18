@@ -57,7 +57,7 @@ class CleanUp(Command):
         matches.extend(glob.glob('./*.so'))
         dirs = []
         dirs.extend(glob.glob('./__pycache__'))
-	dirs.extend(glob.glob('docs/_build'))
+        dirs.extend(glob.glob('docs/_build'))
         for cleandir in [SOURCE, 'test', 'examples']:
             for root, dirnames, filenames in os.walk(cleandir):
                 for filename in fnmatch.filter(filenames, '*.pyc'):

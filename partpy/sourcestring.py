@@ -18,6 +18,11 @@ class SourceString(object):
     the source string.
     """
     def __init__(self, string = None):
+        """Accepts a string or None by default. If a string is given then
+        self.set_string(string) is run automatically. If you wish to load a file
+        then create a SourceString object with no arguments and then use
+        load_file or overload this function when inheriting from SourceString
+        """
         self.string = ''
         self.length = 0
         self.pos = 0
@@ -119,7 +124,8 @@ class SourceString(object):
 
     def get_length(self, length, trim = 0):
         """Return string at current position + length.
-        If trim == true then get as much as possible before eos"""
+        If trim == true then get as much as possible before eos.
+        """
         if trim and not self.has_space(length):
             return self.string[self.pos:]
         elif self.has_space(length):
@@ -220,7 +226,8 @@ class SourceString(object):
 
     def get_surrounding_lines(self, past = 1, future = 1):
         """Return the current line and x,y previous and future lines.
-        Returns a list of SourceLine's"""
+        Returns a list of SourceLine's.
+        """
         string = self.string
         pos = self.pos - self.col
         end = self.length
@@ -275,7 +282,8 @@ class SourceString(object):
         """Returns 1 if string can be matches against SourceString's
         current position.
 
-        If word is >= 1 then it will only match string followed by whitepsace"""
+        If word is >= 1 then it will only match string followed by whitepsace.
+        """
         if word:
             return self.get_string() == string
         return self.get_length(len(string)) == string
@@ -285,7 +293,8 @@ class SourceString(object):
         Will return the string that matches or an empty string if no match.
         Sorts strings list by string length internally.
 
-        if Word then only match if string is followed by a whitespace."""
+        if Word then only match if string is followed by a whitespace.
+        """
         if word:
             current = self.get_string()
             return current if current in strings else ''
@@ -384,7 +393,8 @@ class SourceString(object):
 
     def count_indents(self, spacecount, tabs = 0):
         """Counts the number of indents that can be tabs or spacecount
-        number of spaces in a row from the current position."""
+        number of spaces in a row from the current position.
+        """
         spaces = 0
         indents = 0
         for char in self.string[self.pos - self.col:]:
@@ -498,9 +508,13 @@ class SourceString(object):
 
 
     def __repr__(self):
+        """Returns the entire base string. Called from the repr() builtin."""
         return self.string
 
     def __getitem__(self, index):
+        """Returns the character at the given index.
+        Called by SourceString[index] where index is an integer.
+        """
         return self.string[index]
 
     def __delitem__(self, index):
@@ -510,9 +524,13 @@ class SourceString(object):
         self.string[index] = value
 
     def __len__(self):
+        """Returns the length of base string. Called by len(SourceString)."""
         return len(self.string)
 
     def __contains__(self, string):
+        """Returns a boolean if the given string is within the base string.
+        Called by 'word' in SourceString.
+        """
         return string in self.string
 
     def __iter__(self):

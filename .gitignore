@@ -10,6 +10,7 @@
 *.egg-info
 dist
 _build
+doc
 build
 eggs
 parts

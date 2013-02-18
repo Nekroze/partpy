@@ -1,4 +1,15 @@
-"""Predefined string patterns for use in Matcher.match_string methods."""
+"""Predefined string patterns for use in Matcher.match_string methods.
+
+Defines the following:
+    - alphal = lower case alphabet
+    - alphau = upper case alphabet
+    - alpha = lower and upper case alphabet
+    - number = digits
+    - alnum = digits or lower and upper case alphabet
+    - identifier = first(alpha) rest(alnum | '_')
+    - qualified = first(alpha) rest(alnum | '.')
+    - integer = first(number | '-') rest(number)
+"""
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
@@ -10,5 +21,5 @@ number = '0123456789'
 alnum = alpha + number
 
 identifier = (alpha, alnum + '_')
-qualified = (alpha, alpha + '.')
+qualified = (alpha, alnum + '.')
 integer = (number + '-', number)

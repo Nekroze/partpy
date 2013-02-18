@@ -6,8 +6,8 @@ partpy Package
 
 .. automodule:: partpy.sourcestring
     :members:
-    :undoc-members:
     :show-inheritance:
+    :special-members:
     :private-members:
 
 :mod:`partpyerror` Module
@@ -15,7 +15,6 @@ partpy Package
 
 .. automodule:: partpy.partpyerror
     :members:
-    :undoc-members:
     :show-inheritance:
     :special-members:
     :private-members:
@@ -25,7 +24,6 @@ partpy Package
 
 .. automodule:: partpy.spattern
     :members:
-    :undoc-members:
     :show-inheritance:
     :special-members:
     :private-members:
@@ -35,6 +33,6 @@ partpy Package
 
 .. automodule:: partpy.fpattern
     :members:
-    :undoc-members:
     :show-inheritance:
     :special-members:
+    :private-members:
