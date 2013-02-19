@@ -243,10 +243,10 @@ message if defined.
 
     >>>from partpy import SourceString, PartpyError
     >>>source = SourceString('Let's use partpy')
-    >>>source.eat_length(5)
+    >>>source.eat_length(6)
     >>>raise PartpyError(source, 'you broke it!')
     Traceback (most recent call last):
     partpy.partpyerror.PartpyError:
-    0   |Let's use partpy
-         ^
+    1   |Let's use partpy
+               ^
     you broke it!
