@@ -11,7 +11,7 @@ try:
 except ImportError:
     cy = False
 
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 __author__ = 'Nekroze'
 __email__ = 'nekroze@eturnilnetwork.com'
 SOURCE = 'partpy'
@@ -211,11 +211,12 @@ setup(
     ext_modules = EXTENSIONS,
     requires = ['cython'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Compilers',
         'Topic :: Text Processing :: General'
