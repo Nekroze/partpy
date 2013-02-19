@@ -1,4 +1,4 @@
-"""Predefined string patterns for use in Matcher.match_string methods.
+"""Predefined string patterns for use in Matcher.match_pattern methods.
 
 Defines the following:
     - alphal = lower case alphabet
