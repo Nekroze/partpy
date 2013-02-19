@@ -24,16 +24,16 @@ class Test_SourceString(unittest.TestCase):
         SRC = SourceString('hello\nworld')
 
         SRC.eat_string(SRC.get_length(5))
-        self.assertEqual(SRC.row, 0)
+        self.assertEqual(SRC.row, 1)
         self.assertEqual(SRC.col, 5)
 
         self.assertEqual(SRC.get_char(), '\n')
         SRC.eat_string(SRC.get_char())
-        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.row, 2)
         self.assertEqual(SRC.col, 0)
 
         SRC.eat_string(SRC.get_length(5))
-        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.row, 2)
         self.assertEqual(SRC.col, 5)
         self.assertEqual(SRC.get_char(), '')
 
@@ -41,7 +41,7 @@ class Test_SourceString(unittest.TestCase):
         SRC = SourceString('hello\nworld')
 
         SRC.eat_string('hello\nworld')
-        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.row, 2)
         self.assertEqual(SRC.col, 5)
         self.assertEqual(SRC.get_char(), '')
 
@@ -49,12 +49,12 @@ class Test_SourceString(unittest.TestCase):
         SRC = SourceString('hello\nworld')
 
         SRC.eat_line()
-        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.row, 2)
         self.assertEqual(SRC.col, 0)
         self.assertEqual(SRC.get_char(), 'w')
 
         SRC.eat_line()
-        self.assertEqual(SRC.row, 1)
+        self.assertEqual(SRC.row, 2)
         self.assertEqual(SRC.col, 5)
         self.assertEqual(SRC.get_char(), '')
 
@@ -106,14 +106,14 @@ class Test_SourceString(unittest.TestCase):
     def test_get_lines(self):
         SRC = SourceString('hello\nworld\nthis\nis\na\ntest')
 
-        lines = [str(x) for x in SRC.get_lines(0, 1)]
-        self.assertEqual(lines, ['0   |hello\n', '1   |world\n'])
-        lines = ''.join([repr(x) for x in SRC.get_lines(0, 1)])
+        lines = [str(x) for x in SRC.get_lines(1, 2)]
+        self.assertEqual(lines, ['1   |hello\n', '2   |world\n'])
+        lines = ''.join([repr(x) for x in SRC.get_lines(0, 2)])
         self.assertEqual(lines, 'hello\nworld\n')
 
-        lines = [str(x) for x in SRC.get_lines(4, 5)]
-        self.assertEqual(lines, ['4   |a\n', '5   |test'])
-        lines = ''.join([repr(x) for x in SRC.get_lines(4, 5)])
+        lines = [str(x) for x in SRC.get_lines(5, 6)]
+        self.assertEqual(lines, ['5   |a\n', '6   |test'])
+        lines = ''.join([repr(x) for x in SRC.get_lines(5, 6)])
         self.assertEqual(lines, 'a\ntest')
 
         self.assertEqual(SRC.get_lines(10, 20), None)
@@ -123,8 +123,8 @@ class Test_SourceString(unittest.TestCase):
         SRC = SourceString(base)
 
         lines = [str(x) for x in SRC.get_all_lines()]
-        expected = ['0   |hello\n', '1   |world\n', '2   |this\n', '3   |is\n',
-            '4   |a\n', '5   |test']
+        expected = ['1   |hello\n', '2   |world\n', '3   |this\n', '4   |is\n',
+            '5   |a\n', '6   |test']
         self.assertEqual(lines, expected)
         lines = ''.join([repr(x) for x in SRC.get_all_lines()])
         self.assertEqual(lines, base)
@@ -133,25 +133,25 @@ class Test_SourceString(unittest.TestCase):
         SRC = SourceString('hello\nworld\nthis\nis\na\ntest')
 
         lines = [str(x) for x in SRC.get_surrounding_lines()]
-        self.assertEqual(lines, ['0   |hello\n', '1   |world\n'])
+        self.assertEqual(lines, ['1   |hello\n', '2   |world\n'])
         lines = ''.join([repr(x) for x in SRC.get_surrounding_lines()])
         self.assertEqual(lines, 'hello\nworld\n')
 
         SRC.eat_string('hello\nworld\n')
 
         lines = [str(x) for x in SRC.get_surrounding_lines()]
-        self.assertEqual(lines, ['1   |world\n', '2   |this\n', '3   |is\n'])
+        self.assertEqual(lines, ['2   |world\n', '3   |this\n', '4   |is\n'])
         lines = ''.join([repr(x) for x in SRC.get_surrounding_lines()])
         self.assertEqual(lines, 'world\nthis\nis\n')
 
         lines = [str(x) for x in SRC.get_surrounding_lines(1, 0)]
-        self.assertEqual(lines, ['1   |world\n', '2   |this\n'])
+        self.assertEqual(lines, ['2   |world\n', '3   |this\n'])
         lines = ''.join([repr(x) for x in SRC.get_surrounding_lines(1, 0)])
         self.assertEqual(lines, 'world\nthis\n')
 
         SRC.eat_string('this\nis\na\n')
         lines = [str(x) for x in SRC.get_surrounding_lines()]
-        self.assertEqual(lines, ['4   |a\n', '5   |test'])
+        self.assertEqual(lines, ['5   |a\n', '6   |test'])
         lines = ''.join([repr(x) for x in SRC.get_surrounding_lines()])
         self.assertEqual(lines, 'a\ntest')
 
@@ -294,7 +294,6 @@ class Test_SourceString(unittest.TestCase):
         geny = MAT.retrieve_tokens(MAT.match_pattern, tokens, longest = 0)
         for i, token in enumerate(geny):
             self.assertEqual(expected[i], token)
-
 
     def test_iterator(self):
         string = 'nekroze'

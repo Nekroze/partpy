@@ -20,16 +20,8 @@ class PartpyError(Exception):
         output.extend([str(line) for line in \
             self.partpyobj.get_surrounding_lines(1, 0)])
 
-        padding = 1
-        if self.partpyobj.row < 1000:
-            padding = 2
-        if self.partpyobj.row < 100:
-            padding = 3
-        if self.partpyobj.row < 10:
-            padding = 4
-
         output.append('\n' + \
-            (' ' * (self.partpyobj.col + padding + 1)) + '^' + '\n')
+            (' ' * (self.partpyobj.col + 5)) + '^' + '\n')
         if self.partpymsg:
             output.append(self.partpymsg)
 

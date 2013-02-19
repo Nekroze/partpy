@@ -25,12 +25,10 @@ class SourceString(object):
         """
         self.string = ''
         self.length = 0
-        self.pos = 0
-        self.col = 0
-        self.row = 0
-        self.eos = 0
         if string is not None:
             self.set_string(string)
+        else:
+            self.reset_position()
 
     def load_file(self, filename):
         """Read in file contents and set the current string."""
@@ -53,7 +51,7 @@ class SourceString(object):
         """Reset all current positions."""
         self.pos = 0
         self.col = 0
-        self.row = 0
+        self.row = 1
         self.eos = 0
 
     def has_space(self, length = 1):
@@ -202,14 +200,14 @@ class SourceString(object):
 
     def get_lines(self, first, last):
         """Return SourceLines for lines between and including first and last."""
-        line = 0
+        line = 1
         linestring = []
         linestrings = []
         for char in self.string:
             if line >= first and line <= last:
                 linestring.append(char)
                 if char == '\n':
-                    linestrings.append(''.join(linestring))
+                    linestrings.append((''.join(linestring), line))
                     linestring = []
             elif line > last:
                 break
@@ -217,12 +215,11 @@ class SourceString(object):
             if char == '\n':
                 line += 1
         if linestring:
-            linestrings.append(''.join(linestring))
+            linestrings.append((''.join(linestring), line))
         elif not linestrings:
             return None
 
-        return [SourceLine(lineno, first + num) for num, lineno in \
-            enumerate(linestrings)]
+        return [SourceLine(string, lineno) for string, lineno in linestrings]
 
     def get_surrounding_lines(self, past = 1, future = 1):
         """Return the current line and x,y previous and future lines.
@@ -266,7 +263,7 @@ class SourceString(object):
         """Return all lines of the SourceString as a list of SourceLine's."""
         output = []
         line = []
-        lineno = 0
+        lineno = 1
         for char in self.string:
             line.append(char)
             if char == '\n':
