@@ -141,13 +141,13 @@ class SourceString(object):
         # The following is not yet supported with cython 0.18.0
         #from itertools import takewhile
         #chars = (y for y in takewhile(lambda x: not x.isspace(), string[pos:]))
-        chars = []
-        for char in self.string[self.pos:]:
+        string = self.string
+        pos = self.pos
+        for i, char in enumerate(string[pos:]):
             if char.isspace():
-                break
-            else:
-                chars.append(char)
-        return ''.join(chars)
+                return string[pos:pos + i]
+        else:
+            return string[pos:]
 
     def generator(self, offset = 0):
         """A generator for the current position to the end, pure python."""
