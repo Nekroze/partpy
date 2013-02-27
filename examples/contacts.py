@@ -88,7 +88,7 @@ class ContactsParser(SourceString):
             # Match the current char until it doesnt match the given pattern:
             # first char must be an uppercase alpha and the rest must be lower
             # cased alphas.
-            part = self.match_pattern(spat.alphau, spat.alphal)
+            part = self.match_string_pattern(spat.alphau, spat.alphal)
             if part == '':
                 break  # There is no more matchable strings.
             self.eat_string(part)  # Eat the found string
@@ -111,7 +111,7 @@ class ContactsParser(SourceString):
         """
         email = []
         # Match from current char until a non lower cased alpha
-        name = self.match_pattern(spat.alphal)
+        name = self.match_string_pattern(spat.alphal)
         if not name:
             raise PartpyError(self, 'Expected a valid name')
 
@@ -126,7 +126,7 @@ class ContactsParser(SourceString):
         self.eat_length(1)  # Eat the '@' symbol
 
         # Use string pattern matching to match all lower cased alphas or '.'s.
-        site = self.match_pattern(spat.alphal + '.')
+        site = self.match_string_pattern(spat.alphal + '.')
         if not site:
             raise PartpyError(self, 'Expecting a site, found: ' + site)
 

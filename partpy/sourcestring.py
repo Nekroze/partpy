@@ -316,7 +316,7 @@ class SourceString(object):
         current = self.string[self.pos]
         return current if current in chars else ''
 
-    def match_pattern(self, first, rest = None, least = 1):
+    def match_string_pattern(self, first, rest = None, least = 1):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
@@ -350,7 +350,7 @@ class SourceString(object):
 
         return ''.join(output)
 
-    def match_function(self, first, rest = None, least = 1):
+    def match_function_pattern(self, first, rest = None, least = 1):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
@@ -387,6 +387,18 @@ class SourceString(object):
             return ''
 
         return ''.join(output)
+
+    def match_pattern(self, first, rest = None, least = 1):
+        """Can take the arguments for either a match_function_pattern or
+        the args for match_string_pattern and detects the correct types to call.
+        """
+        func = self.match_string_pattern
+        try:
+            if hasattr(first, '__call__') or hasattr(first[0], '__call__'):
+                func = self.match_function_pattern
+        except TypeError:
+            pass
+        return func(first, rest, least)
 
     def count_indents(self, spacecount, tabs = 0):
         """Counts the number of indents that can be tabs or spacecount

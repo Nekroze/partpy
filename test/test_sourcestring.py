@@ -179,24 +179,42 @@ class Test_SourceString(unittest.TestCase):
         self.assertEqual(MAT.match_any_char(alphas), 'i')
         self.assertEqual(MAT.match_any_char(alphas.replace('i', '')), '')
 
+    def test_match_string_pattern(self):
+        MAT = SourceString('Nekroze')
+        alphas = 'abcdefghijklmnopqrstuvwxyz'
+
+        self.assertEqual(MAT.match_string_pattern(alphas.upper()), 'N')
+        self.assertEqual(MAT.match_string_pattern([alphas.upper(), alphas]), 'Nekroze')
+        self.assertEqual(MAT.match_string_pattern(alphas), '')
+
+    def test_match_function_pattern(self):
+        MAT = SourceString('Test100')
+
+        self.assertEqual(MAT.match_function_pattern(str.isalpha), 'Test')
+        self.assertEqual(MAT.match_function_pattern(str.isalpha, str.isalnum), 'Test100')
+        self.assertEqual(MAT.match_function_pattern(str.isdigit), '')
+
+        self.assertEqual(MAT.match_function_pattern(lambda c: c == 'T' or c in 'te'), 'Te')
+        lam = (lambda c: c == 'T', lambda c: c == 'e')
+        self.assertEqual(MAT.match_function_pattern(lam), 'Te')
+
     def test_match_pattern(self):
+        MAT = SourceString('Test100')
+
+        self.assertEqual(MAT.match_pattern(str.isalpha), 'Test')
+        self.assertEqual(MAT.match_pattern(str.isalpha, str.isalnum), 'Test100')
+        self.assertEqual(MAT.match_pattern(str.isdigit), '')
+
+        self.assertEqual(MAT.match_pattern(lambda c: c == 'T' or c in 'te'), 'Te')
+        lam = (lambda c: c == 'T', lambda c: c == 'e')
+        self.assertEqual(MAT.match_pattern(lam), 'Te')
+
         MAT = SourceString('Nekroze')
         alphas = 'abcdefghijklmnopqrstuvwxyz'
 
         self.assertEqual(MAT.match_pattern(alphas.upper()), 'N')
         self.assertEqual(MAT.match_pattern([alphas.upper(), alphas]), 'Nekroze')
         self.assertEqual(MAT.match_pattern(alphas), '')
-
-    def test_match_function(self):
-        MAT = SourceString('Test100')
-
-        self.assertEqual(MAT.match_function(str.isalpha), 'Test')
-        self.assertEqual(MAT.match_function(str.isalpha, str.isalnum), 'Test100')
-        self.assertEqual(MAT.match_function(str.isdigit), '')
-
-        self.assertEqual(MAT.match_function(lambda c: c == 'T' or c in 'te'), 'Te')
-        lam = (lambda c: c == 'T', lambda c: c == 'e')
-        self.assertEqual(MAT.match_function(lam), 'Te')
 
     def test_count_indents(self):
         MAT = SourceString('  \tTest100')
@@ -246,7 +264,7 @@ class Test_SourceString(unittest.TestCase):
         MAT = SourceString('key, \n    value')
         tokens = {'identifier': str.isalpha, 'comma': lambda x: x == ','}
 
-        geny = MAT.retrieve_tokens(MAT.match_function, tokens)
+        geny = MAT.retrieve_tokens(MAT.match_function_pattern, tokens)
         for i, token in enumerate(geny):
             self.assertEqual(expected[i], token)
 
@@ -256,7 +274,7 @@ class Test_SourceString(unittest.TestCase):
         expected = [('identifier', 'key'), ('comma', ','),
             ('qualified', 'value.test')]
 
-        geny = MAT.retrieve_tokens(MAT.match_pattern, tokens)
+        geny = MAT.retrieve_tokens(MAT.match_string_pattern, tokens)
         for i, token in enumerate(geny):
             self.assertEqual(expected[i], token)
 
@@ -267,7 +285,7 @@ class Test_SourceString(unittest.TestCase):
         tokens = {'identifier': str.isalpha, 'comma': lambda x: x == ',',
             'nl': lambda x: x == '\n'}
 
-        geny = MAT.retrieve_tokens(MAT.match_function, tokens, newlines = 0)
+        geny = MAT.retrieve_tokens(MAT.match_function_pattern, tokens, newlines = 0)
         for i, token in enumerate(geny):
             self.assertEqual(expected[i], token)
 
@@ -275,7 +293,7 @@ class Test_SourceString(unittest.TestCase):
         MAT.reset_position()
         tokens = {'identifier': alpha, 'comma': ',', 'nl': '\n'}
 
-        geny = MAT.retrieve_tokens(MAT.match_pattern, tokens, newlines = 0)
+        geny = MAT.retrieve_tokens(MAT.match_string_pattern, tokens, newlines = 0)
         for i, token in enumerate(geny):
             self.assertEqual(expected[i], token)
 
@@ -285,13 +303,13 @@ class Test_SourceString(unittest.TestCase):
         from partpy.spattern import alpha, identifier, number
         tokens = {'word': alpha, 'identifier': identifier, 'number': number}
 
-        geny = MAT.retrieve_tokens(MAT.match_pattern, tokens)
+        geny = MAT.retrieve_tokens(MAT.match_string_pattern, tokens)
         for i, token in enumerate(geny):
             self.assertEqual(expected[i], token)
 
         MAT.reset_position()
         expected = [('word', 'test'), ('number', '101')]
-        geny = MAT.retrieve_tokens(MAT.match_pattern, tokens, longest = 0)
+        geny = MAT.retrieve_tokens(MAT.match_string_pattern, tokens, longest = 0)
         for i, token in enumerate(geny):
             self.assertEqual(expected[i], token)
 

@@ -63,10 +63,12 @@ cdef class SourceString(object):
     cpdef str match_any_char(self, str chars)
 
     @cy.locals(pattern = str, output = list, firstchar = str, char = str)
-    cpdef str match_pattern(self, first, str rest = ?, long least = *)
+    cpdef str match_string_pattern(self, first, str rest = ?, long least = *)
 
     @cy.locals(output = list, firstchar = str, char = str)
-    cpdef str match_function(self, first, rest = ?, int least = *)
+    cpdef str match_function_pattern(self, first, rest = ?, int least = *)
+
+    cpdef str match_pattern(self, first, rest = ?, int least = *)
 
     @cy.locals(indents = cy.long, spaces = cy.long, char = str)
     cpdef long count_indents(self, long spacecount, int tabs = *)
