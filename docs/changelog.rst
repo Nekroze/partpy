@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+v1.0.0
+ - Added RPython compatability.
+ - Removed some dynamic features
+ - Removed SourceString.generator
+ - SourceString.match_pattern renamed to match_string_pattern
+ - SourceString.match_function renamed to match_function_pattern
+ - Pattern matching methods only take their respective types, no more lists.
+
 v0.3.0
  - Added SourceString methods:
      - eat_line
