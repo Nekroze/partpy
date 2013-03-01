@@ -24,9 +24,9 @@ class Test_Function_Patterns(unittest.TestCase):
         MAT = SourceString('hello.world')
         MAT2 = SourceString('-1234')
 
-        self.assertEqual(MAT.match_function_pattern(pat.identifier), 'hello')
-        self.assertEqual(MAT.match_function_pattern(pat.qualified), 'hello.world')
-        self.assertEqual(MAT2.match_function_pattern(pat.integer), '-1234')
+        self.assertEqual(MAT.match_function_pattern(*pat.identifier), 'hello')
+        self.assertEqual(MAT.match_function_pattern(*pat.qualified), 'hello.world')
+        self.assertEqual(MAT2.match_function_pattern(*pat.integer), '-1234')
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@
 # C extensions
 *.so
 *.c
+contacts-c
 
 # Packages
 *.egg

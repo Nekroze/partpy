@@ -5,8 +5,6 @@ for matching strings and patterns.
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
-from .partpyerror import PartpyError
-
 
 class SourceString(object):
     """Stores the parse string and its length followed by current position
@@ -138,9 +136,6 @@ class SourceString(object):
 
         # Get a char for each char in the current string from pos onward
         #  solong as the char is not whitespace.
-        # The following is not yet supported with cython 0.18.0
-        #from itertools import takewhile
-        #chars = (y for y in takewhile(lambda x: not x.isspace(), string[pos:]))
         string = self.string
         pos = self.pos
         for i, char in enumerate(string[pos:]):
@@ -149,13 +144,8 @@ class SourceString(object):
         else:
             return string[pos:]
 
-    def generator(self, offset = 0):
-        """A generator for the current position to the end, pure python."""
-        for char in self.string[self.pos + offset:]:
-            yield char
-
     def rest_of_string(self, offset = 0):
-        """A copy of the current position till the end of the string."""
+        """A copy of the current position till the end of the source string."""
         if self.has_space(offset):
             return self.string[self.pos + offset:]
         else:
@@ -286,17 +276,20 @@ class SourceString(object):
         return self.get_length(len(string)) == string
 
     def match_any_string(self, strings, word = 0):
-        """Attempts to match each string in strings in order of length.
+        """Attempts to match each string in strings in order.
         Will return the string that matches or an empty string if no match.
-        Sorts strings list by string length internally.
 
-        if Word then only match if string is followed by a whitespace.
+        If word arg >= 1 then only match if string is followed by a whitespace
+        which is much higher performance.
+
+        If word is 0 then you should sort the strings argument yourself by
+        length.
         """
         if word:
             current = self.get_string()
             return current if current in strings else ''
 
-        strings = sorted(strings, key = len)
+        #strings = sorted(strings, key = len)
         current = ''
 
         currentlength = 0
@@ -320,18 +313,12 @@ class SourceString(object):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
-        First may be a list or tuple that will get unpacked to first, rest.
-
         Integer argument least defines and minimum amount of chars that can
         be matched.
 
         If rest is defined then first is used only to match the first arg
         and the rest of the chars are matched against rest.
         """
-        ftype = type(first)
-        if rest is None and ftype in (tuple, list):
-            first, rest = first
-
         firstchar = self.string[self.pos]
         if not firstchar in first:
             return ''
@@ -354,8 +341,6 @@ class SourceString(object):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
-        First may be a list or tuple that will get unpacked to first, rest.
-
         Integer argument least defines and minimum amount of chars that can
         be matched.
 
@@ -366,10 +351,6 @@ class SourceString(object):
         If rest is defined then first is used only to match the first arg
         and the rest of the chars are matched against rest.
         """
-        ftype = type(first)
-        if rest is None and ftype in (tuple, list):
-            first, rest = first
-
         firstchar = self.string[self.pos]
         if not first(firstchar):
             return ''
@@ -387,18 +368,6 @@ class SourceString(object):
             return ''
 
         return ''.join(output)
-
-    def match_pattern(self, first, rest = None, least = 1):
-        """Can take the arguments for either a match_function_pattern or
-        the args for match_string_pattern and detects the correct types to call.
-        """
-        func = self.match_string_pattern
-        try:
-            if hasattr(first, '__call__') or hasattr(first[0], '__call__'):
-                func = self.match_function_pattern
-        except TypeError:
-            pass
-        return func(first, rest, least)
 
     def count_indents(self, spacecount, tabs = 0):
         """Counts the number of indents that can be tabs or spacecount
@@ -481,41 +450,6 @@ class SourceString(object):
                 else:
                     break
 
-    def retrieve_tokens(self, matcher, tokens, longest = 1, newlines = 1):
-        """Moves through SourceString and attempts to match and yield tokens
-        while skipping over whitespace and newlines unless newlines == 0.
-        Uses the longest match by default set longest to 0 to match shortest.
-        The matcher argument is either match_pattern or match_function.
-
-        Currently yield is not supported by cython so this function is
-        un-optimized but is still compiled. As such this could use more pure
-        python optimizations.
-        """
-        matches = {}
-        ordered = []
-        matched = ''
-        index = -1 if longest else 0
-
-        while not self.eos:
-            self.skip_whitespace(newlines)
-            for token, pattern in tokens.items():
-                matched = matcher(pattern)
-                if matched:
-                    matches[matched] = token
-
-            if len(matches):
-                ordered = sorted(matches.keys(), key = len)
-                match = ordered[index]
-                yield (matches[match], match)
-                self.eat_length(len(match))
-            else:
-                raise PartpyError(self, 'No token pattern for current char.')
-            matched = ''
-            matches = {}
-            match = ''
-            ordered = []
-
-
     def __repr__(self):
         """Returns the entire base string. Called from the repr() builtin."""
         return self.string
@@ -552,9 +486,11 @@ class SourceString(object):
 class SourceLine(SourceString):
     """Contains an entire line of a source with handy line specific methods."""
 
-    def __init__(self, string, lineno):
-        super(SourceLine, self).__init__(string)
-        self.lineno = lineno
+    def __init__(self, string, lineno):  # pylint: disable=W0231
+        self.string = ''
+        self.length = 0
+        self.set_string(string)
+        self.lineno = lineno  # pylint: enable=W0231
 
     def strip_trailing_ws(self):
         """Remove trailing whitespace from internal string."""
@@ -572,7 +508,7 @@ class SourceLine(SourceString):
             if not char.isspace():
                 return char
 
-    def __str__(self):
+    def pretty_print(self):
         """Return a string of this line including linenumber."""
         lineno = self.lineno
         padding = 0
@@ -584,3 +520,6 @@ class SourceLine(SourceString):
             padding = 3
 
         return str(lineno) + (' ' * padding) + '|' + self.string
+
+    def __str__(self):
+        return self.pretty_print()

@@ -1,6 +1,5 @@
 """SourceString utilizes SourceString to provide some simple string matching
 functionality."""
-from __future__ import print_function
 __author__ = 'Taylor "Nekroze" Lawson'
 __email__ = 'nekroze@eturnilnetwork.com'
 
@@ -19,12 +18,15 @@ class ContactsParser(SourceString):
     """The contacts parser will simply look for name and website pairs
     while disregarding any kind of whitespace and store them in a dict.
     """
+    error = False
+
     def parse(self):
         """Run the parser over the entire sourestring and return the results."""
         try:
             return self.parse_top_level()
         except PartpyError as ex:
-            print(ex)
+            self.error = True
+            print(ex.pretty_print())
 
     def parse_top_level(self):
         """The top level parser will do a loop where it looks for a single
@@ -40,7 +42,10 @@ class ContactsParser(SourceString):
             # skip all whitespace between the end of the last contact and the
             # next non whitespace character, ie until something interesting.
             self.parse_whitespace()
-        return dict((key, value) for (key, value) in contacts)
+        output = {}
+        for key, value in contacts:
+            output[key] = value
+        return output
 
     def parse_contact(self):
         """Parse a top level contact expression, these consist of a name
@@ -71,13 +76,10 @@ class ContactsParser(SourceString):
         """
         while True:
             char = self.get_char()  # get the current SourceString character.
-            if not char.isspace():
+            if not char in ['\n', '\t', ' ']:
                 break
             else:
-                # eat the whitespace char. eat_string(char) is used rather then
-                # eat_length(1) because eat_string detects newlines and uses it
-                # for position counting.
-                self.eat_string(char)
+                self.eat_length(1)  # eat the whitespace char.
 
     def parse_name(self):
         """This function uses string patterns to match a title cased name.
@@ -136,3 +138,20 @@ class ContactsParser(SourceString):
 
 PARSER = ContactsParser()
 PARSER.set_string(EXAMPLE)
+
+def main(argv):  # pylint: disable=W0613
+    output = PARSER.parse()
+    if PARSER.error or output is None:
+        return 1
+
+    for name, email in output.items():
+        print(name, ' : ', email)
+
+    return 0  # pylint: enable=W0613
+
+def target(*args):  # pylint: disable=W0613
+    return main, None  # pylint: enable=W0613
+
+if __name__ == "__main__":
+    import sys
+    main(sys.argv)

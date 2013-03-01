@@ -30,9 +30,9 @@ class Test_String_Patterns(unittest.TestCase):
         MAT2 = SourceString()
         MAT2.set_string('-1234')
 
-        self.assertEqual(MAT.match_string_pattern(pat.identifier), 'hello')
-        self.assertEqual(MAT.match_string_pattern(pat.qualified), 'hello.world')
-        self.assertEqual(MAT2.match_string_pattern(pat.integer), '-1234')
+        self.assertEqual(MAT.match_string_pattern(*pat.identifier), 'hello')
+        self.assertEqual(MAT.match_string_pattern(*pat.qualified), 'hello.world')
+        self.assertEqual(MAT2.match_string_pattern(*pat.integer), '-1234')
 
 
 if __name__ == "__main__":

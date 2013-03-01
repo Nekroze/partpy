@@ -10,14 +10,18 @@ class PartpyError(Exception):
     with line numbers and a '^' under the current position of the object with
     the optional message on the following line.
     """
-    def __init__(self, obj, msg = None):
-        super(PartpyError, self).__init__(obj, msg)
+    def __init__(self, obj, msg = None):  # pylint: disable=W0231
         self.partpymsg = msg
-        self.partpyobj = obj
+        self.partpyobj = obj  # pylint: enable=W0231
 
-    def __repr__(self):
+    def pretty_print(self):
+        """Print the previous and current line with line numbers and
+        a carret under the current character position.
+
+        Will also print a message if one is given to this exception.
+        """
         output = ['\n']
-        output.extend([str(line) for line in \
+        output.extend([line.pretty_print() for line in \
             self.partpyobj.get_surrounding_lines(1, 0)])
 
         output.append('\n' + \
@@ -27,5 +31,8 @@ class PartpyError(Exception):
 
         return ''.join(output)
 
+    def __repr__(self):
+        return self.pretty_print()
+
     def __str__(self):
-        return self.__repr__()
+        return self.pretty_print()

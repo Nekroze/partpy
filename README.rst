@@ -15,6 +15,9 @@ the language design, recognition and whatever else you need to do
 without having to figure out how string matching should be done or
 most of the error handling process.
 
+``partpy`` supports out of the box ``Cython`` or ``RPython`` compilation
+for added performance.
+
 Documentation & Usage
 =====================
 
