@@ -3,7 +3,6 @@ LICENSE.txt
 README.rst
 partcy.py
 setup.py
-tox.ini
 examples/__init__.py
 examples/contacts.py
 partpy/__init__.py

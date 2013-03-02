@@ -410,7 +410,10 @@ class SourceString(object):
         return (indents, charlen)
 
     def count_indents_last_line(self, spacecount, tabs = 0, back = 5):
-        """Finds the last meaningful line and returns its indent level."""
+        """Finds the last meaningful line and returns its indent level.
+        Back specifies the amount of lines to look back for a none whitespace
+        line.
+        """
         lines = self.get_surrounding_lines(back, 0)
 
         for line in reversed(lines):
@@ -421,6 +424,8 @@ class SourceString(object):
     def count_indents_length_last_line(self, spacecount, tabs = 0, back = 5):
         """Finds the last meaningful line and returns its indent level and
         character length.
+        Back specifies the amount of lines to look back for a none whitespace
+        line.
         """
         lines = self.get_surrounding_lines(back, 0)
 
@@ -506,8 +511,11 @@ class SourceLine(SourceString):
             if not char.isspace():
                 return char
 
-    def pretty_print(self):
-        """Return a string of this line including linenumber."""
+    def pretty_print(self, carrot = False):
+        """Return a string of this line including linenumber.
+        If carrot is True then a line is added under the string with a carrot
+        under the current character position.
+        """
         lineno = self.lineno
         padding = 0
         if lineno < 1000:
@@ -517,7 +525,10 @@ class SourceLine(SourceString):
         if lineno < 10:
             padding = 3
 
-        return str(lineno) + (' ' * padding) + '|' + self.string
+        string = str(lineno) + (' ' * padding) + '|' + self.string
+        if carrot:
+            string += '\n' + (' ' * (self.col + 5))
+        return string
 
     def __str__(self):
         return self.pretty_print()

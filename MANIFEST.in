@@ -3,4 +3,3 @@ include LICENSE.txt
 include partcy.py
 include examples/__init__.py
 include examples/contacts.py
-include tox.ini

@@ -14,7 +14,7 @@ class PartpyError(Exception):
         self.partpymsg = msg
         self.partpyobj = obj  # pylint: enable=W0231
 
-    def pretty_print(self):
+    def pretty_print(self, carrot = True):
         """Print the previous and current line with line numbers and
         a carret under the current character position.
 
@@ -24,8 +24,9 @@ class PartpyError(Exception):
         output.extend([line.pretty_print() for line in \
             self.partpyobj.get_surrounding_lines(1, 0)])
 
-        output.append('\n' + \
-            (' ' * (self.partpyobj.col + 5)) + '^' + '\n')
+        if carrot:
+            output.append('\n' + \
+                              (' ' * (self.partpyobj.col + 5)) + '^' + '\n')
         if self.partpymsg:
             output.append(self.partpymsg)
 
