@@ -93,7 +93,7 @@ class Test(Command):
 
     def run(self):
         """Run unittests."""
-        if os.system(PYTHON + ' -m unittest discover ' + TESTDIR + ' "test_*.py"'):
+        if os.system('py.test'):
             sys.exit(1)
 
 

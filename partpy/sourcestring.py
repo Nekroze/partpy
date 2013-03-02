@@ -3,7 +3,7 @@ some simple methods for retrieving and moving current position aswell as methods
 for matching strings and patterns.
 """
 __author__ = 'Taylor "Nekroze" Lawson'
-__email__ = 'nekroze@eturnilnetwork.com'
+__email__ = 'nekroze@eturnilnetwork.com'  
 
 
 class SourceString(object):
@@ -288,8 +288,6 @@ class SourceString(object):
         if word:
             current = self.get_string()
             return current if current in strings else ''
-
-        #strings = sorted(strings, key = len)
         current = ''
 
         currentlength = 0
