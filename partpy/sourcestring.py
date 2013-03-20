@@ -1,9 +1,9 @@
 """SourceString stores the entire string to be parsed in memory and provides
-some simple methods for retrieving and moving current position aswell as methods
-for matching strings and patterns.
+some simple methods for retrieving and moving current position aswell as
+methods for matching strings and patterns.
 """
 __author__ = 'Taylor "Nekroze" Lawson'
-__email__ = 'nekroze@eturnilnetwork.com'  
+__email__ = 'nekroze@eturnilnetwork.com'
 
 
 class SourceString(object):
@@ -12,21 +12,23 @@ class SourceString(object):
 
     It also stores the current row and column position as manually counted.
 
-    Provides multiple methods for matching strings and patterns and working with
-    the source string.
+    Provides multiple methods for matching strings and patterns and working
+    with the source string.
     """
-    def __init__(self, string = None):
+    def __init__(self, string=None):
         """Accepts a string or None by default. If a string is given then
-        self.set_string(string) is run automatically. If you wish to load a file
-        then create a SourceString object with no arguments and then use
-        load_file or overload this function when inheriting from SourceString
+        self.set_string(string) is run automatically. If you wish to load a
+        file then create a SourceString object with no arguments and then use
+        load_file or overload this function when inheriting from SourceString.
         """
         self.string = ''
         self.length = 0
+        self.pos = 0
+        self.col = 0
+        self.row = 1
+        self.eos = 0
         if string is not None:
             self.set_string(string)
-        else:
-            self.reset_position()
 
     def load_file(self, filename):
         """Read in file contents and set the current string."""
@@ -52,7 +54,7 @@ class SourceString(object):
         self.row = 1
         self.eos = 0
 
-    def has_space(self, length = 1):
+    def has_space(self, length=1):
         """Returns boolean if self.pos + length < working string length."""
         return self.pos + length - 1 < self.length
 
@@ -118,7 +120,7 @@ class SourceString(object):
 
         return self.string[self.pos]
 
-    def get_length(self, length, trim = 0):
+    def get_length(self, length, trim=0):
         """Return string at current position + length.
         If trim == true then get as much as possible before eos.
         """
@@ -144,7 +146,7 @@ class SourceString(object):
         else:
             return string[pos:]
 
-    def rest_of_string(self, offset = 0):
+    def rest_of_string(self, offset=0):
         """A copy of the current position till the end of the source string."""
         if self.has_space(offset):
             return self.string[self.pos + offset:]
@@ -189,7 +191,7 @@ class SourceString(object):
         return SourceLine(''.join(output), self.row)
 
     def get_lines(self, first, last):
-        """Return SourceLines for lines between and including first and last."""
+        """Return SourceLines for lines between and including first & last."""
         line = 1
         linestring = []
         linestrings = []
@@ -211,7 +213,7 @@ class SourceString(object):
 
         return [SourceLine(string, lineno) for string, lineno in linestrings]
 
-    def get_surrounding_lines(self, past = 1, future = 1):
+    def get_surrounding_lines(self, past=1, future=1):
         """Return the current line and x,y previous and future lines.
         Returns a list of SourceLine's.
         """
@@ -265,7 +267,7 @@ class SourceString(object):
 
         return output
 
-    def match_string(self, string, word = 0):
+    def match_string(self, string, word=0):
         """Returns 1 if string can be matches against SourceString's
         current position.
 
@@ -275,7 +277,7 @@ class SourceString(object):
             return self.get_string() == string
         return self.get_length(len(string)) == string
 
-    def match_any_string(self, strings, word = 0):
+    def match_any_string(self, strings, word=0):
         """Attempts to match each string in strings in order.
         Will return the string that matches or an empty string if no match.
 
@@ -307,7 +309,7 @@ class SourceString(object):
         current = self.string[self.pos]
         return current if current in chars else ''
 
-    def match_string_pattern(self, first, rest = None, least = 1):
+    def match_string_pattern(self, first, rest=None, least=1):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
@@ -335,7 +337,7 @@ class SourceString(object):
 
         return ''.join(output)
 
-    def match_function_pattern(self, first, rest = None, least = 1):
+    def match_function_pattern(self, first, rest=None, least=1):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
@@ -367,7 +369,7 @@ class SourceString(object):
 
         return ''.join(output)
 
-    def count_indents(self, spacecount, tabs = 0):
+    def count_indents(self, spacecount, tabs=0):
         """Counts the number of indents that can be tabs or spacecount
         number of spaces in a row from the current position.
         """
@@ -386,7 +388,7 @@ class SourceString(object):
                 spaces = 0
         return indents
 
-    def count_indents_length(self, spacecount, tabs = 0):
+    def count_indents_length(self, spacecount, tabs=0):
         """Counts the number of indents that can be tabs or spacecount
         number of spaces in a row from the current position.
 
@@ -409,7 +411,7 @@ class SourceString(object):
                 spaces = 0
         return (indents, charlen)
 
-    def count_indents_last_line(self, spacecount, tabs = 0, back = 5):
+    def count_indents_last_line(self, spacecount, tabs=0, back=5):
         """Finds the last meaningful line and returns its indent level.
         Back specifies the amount of lines to look back for a none whitespace
         line.
@@ -421,7 +423,7 @@ class SourceString(object):
                 return line.count_indents(spacecount, tabs)
         return 0
 
-    def count_indents_length_last_line(self, spacecount, tabs = 0, back = 5):
+    def count_indents_length_last_line(self, spacecount, tabs=0, back=5):
         """Finds the last meaningful line and returns its indent level and
         character length.
         Back specifies the amount of lines to look back for a none whitespace
@@ -434,7 +436,7 @@ class SourceString(object):
                 return line.count_indents_length(spacecount, tabs)
         return (0, 0)
 
-    def skip_whitespace(self, newlines = 0):
+    def skip_whitespace(self, newlines=0):
         """Moves the position forwards to the next non newline space character.
         If newlines >= 1 include newlines as spaces.
         """
@@ -486,6 +488,7 @@ class SourceString(object):
             yield string[self.pos]
             self.eat_length(1)
 
+
 class SourceLine(SourceString):
     """Contains an entire line of a source with handy line specific methods."""
 
@@ -511,7 +514,7 @@ class SourceLine(SourceString):
             if not char.isspace():
                 return char
 
-    def pretty_print(self, carrot = False):
+    def pretty_print(self, carrot=False):
         """Return a string of this line including linenumber.
         If carrot is True then a line is added under the string with a carrot
         under the current character position.
