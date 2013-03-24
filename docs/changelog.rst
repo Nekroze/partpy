@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+v1.1.0
+ - Added SourceString.eol_distance_next
+ - Added SourceString.eol_distance_last
+ - Added SourceString.spew_length a reverse of eat_length
+ - Minor failsafes
+
 v1.0.0
  - Added RPython compatability.
  - Removed some dynamic features
