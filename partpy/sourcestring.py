@@ -81,7 +81,7 @@ class SourceString(object):
     def spew_length(self, length):
         """Move current position backwards by length."""
         pos = self.pos
-        if not pos:
+        if not pos or length > pos:
             return None
 
         row = self.row
@@ -211,12 +211,15 @@ class SourceString(object):
 
     def get_current_line(self):
         """Return a SourceLine of the current line."""
+        if not self.has_space():
+            return None
+        
         pos = self.pos - self.col
         string = self.string
         end = self.length
 
         output = []
-        while string[pos] != '\n':
+        while pos < len(string) and string[pos] != '\n':
             output.append(string[pos])
             pos += 1
             if pos == end:
