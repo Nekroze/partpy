@@ -58,8 +58,47 @@ class SourceString(object):
         """Returns boolean if self.pos + length < working string length."""
         return self.pos + length - 1 < self.length
 
+    def eol_distance_next(self):
+        """Return the ammount of characters until the next newline."""
+        distance = 0
+        for char in self.string[self.pos:]:
+            if char == '\n':
+                break
+            else:
+                distance += 1
+        return distance
+
+    def eol_distance_last(self):
+        """Return the ammount of characters until the last newline."""
+        distance = 0
+        for char in reversed(self.string[:self.pos]):
+            if char == '\n':
+                break
+            else:
+                distance += 1
+        return distance
+
+    def spew_length(self, length):
+        """Move current position backwards by length."""
+        pos = self.pos
+        if not pos:
+            return None
+
+        row = self.row
+        for char in reversed(self.string[pos - length:pos]):
+            pos -= 1
+            if char == '\n':  # handle a newline char
+                row -= 1
+
+        self.pos = pos
+        self.col = self.eol_distance_last()
+        self.row = row
+
+        if self.has_space():  # Set eos if there is no more space left.
+            self.eos = 0
+
     def eat_length(self, length):
-        """Move current position by length and set eos if not has_space()."""
+        """Move current position forward by length and sets eos if needed."""
         pos = self.pos
         if self.eos or pos + length > self.length:
             return None

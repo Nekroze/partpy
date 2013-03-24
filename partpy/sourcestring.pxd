@@ -19,6 +19,12 @@ cdef class SourceString(object):
 
     cpdef int has_space(self, long length = *)
 
+    @cy.locals(distance = cy.long)
+    cpdef long eol_distance_next(self)
+    
+    @cy.locals(distance = cy.long)
+    cpdef long eol_distance_last(self)
+
     @cy.locals(pos = cy.long, col = cy.long, row = cy.long, char = str)
     cpdef eat_length(self, long length)
 

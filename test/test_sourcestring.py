@@ -13,6 +13,52 @@ class Test_SourceString(object):
 
         assert SRC.has_space() == False
 
+    def test_eol_distance_next(self):
+        SRC = SourceString('hello world')
+
+        assert SRC.eol_distance_next() == 11
+        SRC.eat_string('hello')
+        assert SRC.eol_distance_next() == 6
+
+    def test_eol_distance_last(self):
+        SRC = SourceString('hello world')
+
+        assert SRC.eol_distance_last() == 0
+        SRC.eat_string('hello')
+        assert SRC.eol_distance_last() == 5
+
+    def test_spew_length(self):
+        SRC = SourceString('hello world')
+
+        SRC.eat_string('hello world')
+        assert SRC.eos
+        SRC.spew_length(1)
+        assert SRC.get_char() == 'd'
+        SRC.spew_length(10)
+        assert SRC.get_char() == 'h'
+        SRC.spew_length(3)
+        assert SRC.get_char() == 'h'
+
+    def test_spew_length_multiline_peices(self):
+        SRC = SourceString('hello\nworld')
+
+        SRC.eat_length(11)
+        assert SRC.row == 2
+        assert SRC.col == 5
+        assert SRC.get_char() == ''
+        assert SRC.eos
+
+        SRC.spew_length(5)
+        assert SRC.row == 2
+        assert SRC.col == 0
+        assert SRC.get_char() == 'w'
+        assert not SRC.eos
+
+        SRC.spew_length(6)
+        assert SRC.row == 1
+        assert SRC.col == 0
+        assert SRC.get_char() == 'h'
+
     def test_eat_string(self):
         SRC = SourceString('hello world')
 
@@ -246,4 +292,3 @@ class Test_SourceString(object):
         assert string == ''.join(MAT)
         #for i, char in enumerate(MAT):
         #    assert string[i] == char
-
