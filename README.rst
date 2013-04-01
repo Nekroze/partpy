@@ -22,3 +22,15 @@ Documentation & Usage
 =====================
 
 All documentation and usage information is hosted at http://partpy.readthedocs.org
+
+Feedback
+========
+
+If you have any suggestions or questions about ``partpy`` feel free to email me
+at nekroze@eturnilnetwork.com.
+
+You can check out more of what I am doing at http://nekroze.eturnilnetwork.com
+my blog.
+
+If you encounter any errors or problems with ``partpy``, please let me know!
+Open an Issue at the GitHub http://github.com/Nekroze/partpy main repository.
