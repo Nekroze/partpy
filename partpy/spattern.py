@@ -7,7 +7,7 @@ Defines the following:
     - number = digits
     - alnum = digits or lower and upper case alphabet
     - identifier = first(alpha) rest(alnum | '_')
-    - qualified = first(alpha) rest(alnum | '.')
+    - qualified = first(alpha) rest(alnum | '.' | '_')
     - integer = first(number | '-') rest(number)
 """
 __author__ = 'Taylor "Nekroze" Lawson'
@@ -21,5 +21,5 @@ number = '0123456789'
 alnum = alpha + number
 
 identifier = (alpha, alnum + '_')
-qualified = (alpha, alnum + '.')
+qualified = (alpha, alnum + '_.')
 integer = (number + '-', number)
