@@ -54,24 +54,24 @@ class SourceString(object):
         self.row = 1
         self.eos = 0
 
-    def has_space(self, length=1):
+    def has_space(self, length=1, offset=0):
         """Returns boolean if self.pos + length < working string length."""
-        return self.pos + length - 1 < self.length
+        return self.pos + (length+offset) - 1 < self.length
 
-    def eol_distance_next(self):
-        """Return the ammount of characters until the next newline."""
+    def eol_distance_next(self, offset=0):
+        """Return the amount of characters until the next newline."""
         distance = 0
-        for char in self.string[self.pos:]:
+        for char in self.string[self.pos+offset:]:
             if char == '\n':
                 break
             else:
                 distance += 1
         return distance
 
-    def eol_distance_last(self):
+    def eol_distance_last(self, offset=0):
         """Return the ammount of characters until the last newline."""
         distance = 0
-        for char in reversed(self.string[:self.pos]):
+        for char in reversed(self.string[:self.pos+offset]):
             if char == '\n':
                 break
             else:
@@ -152,33 +152,33 @@ class SourceString(object):
             eat_length(1)
         eat_length(1)
 
-    def get_char(self):
+    def get_char(self, offset=0):
         """Return the current character in the working string."""
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return ''
 
-        return self.string[self.pos]
+        return self.string[self.pos+offset]
 
-    def get_length(self, length, trim=0):
+    def get_length(self, length, trim=0, offset=0):
         """Return string at current position + length.
         If trim == true then get as much as possible before eos.
         """
-        if trim and not self.has_space(length):
-            return self.string[self.pos:]
-        elif self.has_space(length):
-            return self.string[self.pos:self.pos + length]
+        if trim and not self.has_space(offset+length):
+            return self.string[self.pos+offset:]
+        elif self.has_space(offset+length):
+            return self.string[self.pos+offset:self.pos+offset + length]
         else:
             return ''
 
-    def get_string(self):
+    def get_string(self, offset=0):
         """Return non space chars from current position until a whitespace."""
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return ''
 
         # Get a char for each char in the current string from pos onward
         #  solong as the char is not whitespace.
         string = self.string
-        pos = self.pos
+        pos = self.pos+offset
         for i, char in enumerate(string[pos:]):
             if char.isspace():
                 return string[pos:pos + i]
@@ -187,8 +187,8 @@ class SourceString(object):
 
     def rest_of_string(self, offset=0):
         """A copy of the current position till the end of the source string."""
-        if self.has_space(offset):
-            return self.string[self.pos + offset:]
+        if self.has_space(offset=offset):
+            return self.string[self.pos+offset:]
         else:
             return ''
 
@@ -213,7 +213,7 @@ class SourceString(object):
         """Return a SourceLine of the current line."""
         if not self.has_space():
             return None
-        
+
         pos = self.pos - self.col
         string = self.string
         end = self.length
@@ -309,17 +309,17 @@ class SourceString(object):
 
         return output
 
-    def match_string(self, string, word=0):
+    def match_string(self, string, word=0, offset=0):
         """Returns 1 if string can be matches against SourceString's
         current position.
 
         If word is >= 1 then it will only match string followed by whitepsace.
         """
         if word:
-            return self.get_string() == string
-        return self.get_length(len(string)) == string
+            return self.get_string(offset) == string
+        return self.get_length(len(string), offset) == string
 
-    def match_any_string(self, strings, word=0):
+    def match_any_string(self, strings, word=0, offset=0):
         """Attempts to match each string in strings in order.
         Will return the string that matches or an empty string if no match.
 
@@ -330,7 +330,7 @@ class SourceString(object):
         length.
         """
         if word:
-            current = self.get_string()
+            current = self.get_string(offset)
             return current if current in strings else ''
         current = ''
 
@@ -339,19 +339,19 @@ class SourceString(object):
         for string in strings:
             length = len(string)
             if length != currentlength:
-                current = self.get_length(length)
+                current = self.get_length(length, offset)
             if string == current:
                 return string
         return ''
 
-    def match_any_char(self, chars):
+    def match_any_char(self, chars, offset=0):
         """Match and return the current SourceString char if its in chars."""
         if not self.has_space():
             return ''
-        current = self.string[self.pos]
+        current = self.string[self.pos+offset]
         return current if current in chars else ''
 
-    def match_string_pattern(self, first, rest=None, least=1):
+    def match_string_pattern(self, first, rest=None, least=1, offset=0):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
@@ -361,14 +361,14 @@ class SourceString(object):
         If rest is defined then first is used only to match the first arg
         and the rest of the chars are matched against rest.
         """
-        firstchar = self.string[self.pos]
+        firstchar = self.string[self.pos+offset]
         if not firstchar in first:
             return ''
 
         output = [firstchar]
         pattern = first if rest is None else rest
 
-        for char in self.string[self.pos + 1:]:
+        for char in self.string[self.pos+offset + 1:]:
             if char in pattern:
                 output.append(char)
             else:
@@ -379,7 +379,7 @@ class SourceString(object):
 
         return ''.join(output)
 
-    def match_function_pattern(self, first, rest=None, least=1):
+    def match_function_pattern(self, first, rest=None, least=1, offset=0):
         """Match each char sequentially from current SourceString position
         until the pattern doesnt match and return all maches.
 
@@ -393,14 +393,14 @@ class SourceString(object):
         If rest is defined then first is used only to match the first arg
         and the rest of the chars are matched against rest.
         """
-        firstchar = self.string[self.pos]
+        firstchar = self.string[self.pos+offset]
         if not first(firstchar):
             return ''
 
         output = [firstchar]
         pattern = first if rest is None else rest
 
-        for char in self.string[self.pos + 1:]:
+        for char in self.string[self.pos+offset + 1:]:
             if pattern(char):
                 output.append(char)
             else:
@@ -411,13 +411,13 @@ class SourceString(object):
 
         return ''.join(output)
 
-    def count_indents(self, spacecount, tabs=0):
+    def count_indents(self, spacecount, tabs=0, offset=0):
         """Counts the number of indents that can be tabs or spacecount
-        number of spaces in a row from the current position.
+        number of spaces in a row from the current line.
         """
         spaces = 0
         indents = 0
-        for char in self.string[self.pos - self.col:]:
+        for char in self.string[self.pos+offset - self.col:]:
             if char == ' ':
                 spaces += 1
             elif tabs and char == '\t':
@@ -430,16 +430,16 @@ class SourceString(object):
                 spaces = 0
         return indents
 
-    def count_indents_length(self, spacecount, tabs=0):
+    def count_indents_length(self, spacecount, tabs=0, offset=0):
         """Counts the number of indents that can be tabs or spacecount
-        number of spaces in a row from the current position.
+        number of spaces in a row from the current line.
 
         Also returns the character length of the indents.
         """
         spaces = 0
         indents = 0
         charlen = 0
-        for char in self.string[self.pos - self.col:]:
+        for char in self.string[self.pos+offset - self.col:]:
             if char == ' ':
                 spaces += 1
             elif tabs and char == '\t':
