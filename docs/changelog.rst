@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+V1.2.0
+ - Added Offset arguments to most SourceString methods that should support it.
+
 v1.1.0
  - Added SourceString.eol_distance_next
  - Added SourceString.eol_distance_last
