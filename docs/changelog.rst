@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+V1.2.1
+ - Fixed .pxd files not being included in source distribution
+
 V1.2.0
  - Added Offset arguments to most SourceString methods that should support it.
  - Adde '_' to qualified identifiers

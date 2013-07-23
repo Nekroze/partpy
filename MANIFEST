@@ -6,8 +6,10 @@ setup.py
 examples/__init__.py
 examples/contacts.py
 partpy/__init__.py
+partpy/fpattern.pxd
 partpy/fpattern.py
 partpy/partpyerror.py
+partpy/sourcestring.pxd
 partpy/sourcestring.py
 partpy/spattern.py
 test/test_examples_contacts.py
