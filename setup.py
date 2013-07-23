@@ -11,7 +11,7 @@ try:
 except ImportError:
     cy = False
 
-__version__ = '1.2.1'
+__version__ = '1.2.2'
 __author__ = 'Nekroze'
 __email__ = 'nekroze@eturnilnetwork.com'
 SOURCE = 'partpy'

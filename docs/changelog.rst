@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+V1.2.2
+ - Added Impyccable to test suite for better pattern testing
+ - Added no space guards to pattern matching and indenter
+
 V1.2.1
  - Fixed .pxd files not being included in source distribution
 
