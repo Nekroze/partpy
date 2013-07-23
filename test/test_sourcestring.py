@@ -1,4 +1,9 @@
 from partpy.sourcestring import SourceString
+from impyccable.generators import *
+from impyccable.runners import Impyccable
+
+
+RUNS = 1000
 
 
 class Test_SourceString(object):
@@ -224,6 +229,17 @@ class Test_SourceString(object):
         assert MAT.match_any_char(alphas) == 'i'
         assert MAT.match_any_char(alphas.replace('i', '')) == ''
 
+    @Impyccable(str, runs=RUNS)
+    def test_match_string_pattern_imp(self, string):
+        MAT = SourceString(string)
+        alphas = 'abcdefghijklmnopqrstuvwxyz'
+        expected = ''
+        for char in string:
+            if char not in alphas:
+                break
+            expected += char
+        assert MAT.match_string_pattern(alphas) == expected
+
     def test_match_string_pattern(self):
         MAT = SourceString('Nekroze')
         alphas = 'abcdefghijklmnopqrstuvwxyz'
@@ -231,6 +247,17 @@ class Test_SourceString(object):
         assert MAT.match_string_pattern(alphas.upper()) == 'N'
         assert MAT.match_string_pattern(alphas.upper(), alphas) == 'Nekroze'
         assert MAT.match_string_pattern(alphas) == ''
+
+    @Impyccable(str, runs=RUNS)
+    def test_match_function_pattern_imp(self, string):
+        MAT = SourceString(string)
+        alphas = 'abcdefghijklmnopqrstuvwxyz'
+        expected = ''
+        for char in string:
+            if not char.islower():
+                break
+            expected += char
+        assert MAT.match_function_pattern(str.islower) == expected
 
     def test_match_function_pattern(self):
         MAT = SourceString('Test100')

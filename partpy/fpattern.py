@@ -20,15 +20,18 @@ alpha = str.isalpha
 number = str.isdigit
 alnum = str.isalnum
 
+
 def _identifier_rest(char):
     return alnum(char) or char == '_'
 
 identifier = (alpha, _identifier_rest)
 
+
 def _qualified_rest(char):
     return alnum(char) or char in '_.'
 
 qualified = (alpha, _qualified_rest)
+
 
 def _integer_first(char):
     return number(char) or char == '-'
