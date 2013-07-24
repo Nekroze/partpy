@@ -346,7 +346,7 @@ class SourceString(object):
 
     def match_any_char(self, chars, offset=0):
         """Match and return the current SourceString char if its in chars."""
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return ''
         current = self.string[self.pos + offset]
         return current if current in chars else ''
@@ -395,7 +395,7 @@ class SourceString(object):
         If rest is defined then first is used only to match the first arg
         and the rest of the chars are matched against rest.
         """
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return ''
         firstchar = self.string[self.pos + offset]
         if not first(firstchar):
@@ -419,7 +419,7 @@ class SourceString(object):
         """Counts the number of indents that can be tabs or spacecount
         number of spaces in a row from the current line.
         """
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return 0
         spaces = 0
         indents = 0
@@ -442,7 +442,7 @@ class SourceString(object):
 
         Also returns the character length of the indents.
         """
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return 0
         spaces = 0
         indents = 0
@@ -466,7 +466,7 @@ class SourceString(object):
         Back specifies the amount of lines to look back for a none whitespace
         line.
         """
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return 0
         lines = self.get_surrounding_lines(back, 0)
 
@@ -481,7 +481,7 @@ class SourceString(object):
         Back specifies the amount of lines to look back for a none whitespace
         line.
         """
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return 0
         lines = self.get_surrounding_lines(back, 0)
 

@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+V1.2.3
+ - Fix for new no space guards on patern matching not passing offsets
+
 V1.2.2
  - Added Impyccable to test suite for better pattern testing
  - Added no space guards to pattern matching and indenter
