@@ -361,7 +361,7 @@ class SourceString(object):
         If rest is defined then first is used only to match the first arg
         and the rest of the chars are matched against rest.
         """
-        if not self.has_space():
+        if not self.has_space(offset=offset):
             return ''
         firstchar = self.string[self.pos + offset]
         if not firstchar in first:
