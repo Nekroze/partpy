@@ -466,7 +466,7 @@ class SourceString(object):
         Back specifies the amount of lines to look back for a none whitespace
         line.
         """
-        if not self.has_space(offset=offset):
+        if not self.has_space():
             return 0
         lines = self.get_surrounding_lines(back, 0)
 
@@ -481,7 +481,7 @@ class SourceString(object):
         Back specifies the amount of lines to look back for a none whitespace
         line.
         """
-        if not self.has_space(offset=offset):
+        if not self.has_space():
             return 0
         lines = self.get_surrounding_lines(back, 0)
 
