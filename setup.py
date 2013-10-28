@@ -1,35 +1,23 @@
-#!/usr/bin/python
-import re
+#!/usr/bin/env python
+
 import os
 import sys
-import platform
-from distutils.core import setup, Command
-cy = True
-try:
-    from Cython.Distutils import build_ext
-    import partcy
-except ImportError:
-    cy = False
+from setuptools.command import Command
 
-__version__ = '1.2.4'
-__author__ = 'Nekroze'
-__email__ = 'nekroze@eturnilnetwork.com'
-SOURCE = 'partpy'
-TESTDIR = 'test'
-PROJECTNAME = 'partpy'
-PROJECTSITE = 'http://github.com/Nekroze/partpy'
-PROJECTDESC = 'Parser Tools in Python, a collection of tools for hand writing lexers and parsers.'
-PROJECTLICENSE = 'MIT'
-PLATFORMS = ['*nix', 'Windows']
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py sdist upload')
+    sys.exit()
+
 
 EXTENSIONS = []
 if cy:
     EXTENSIONS.extend(partcy.EXTENSIONS)
-
-
-PYTHON = 'python'
-if platform.system() != 'Windows' and sys.version_info[0] == 3:
-    PYTHON = 'python3'
 
 
 class CleanUp(Command):
@@ -80,150 +68,48 @@ class CleanUp(Command):
         for dir in dirs:
             shutil.rmtree(dir)
 
-class Test(Command):
-    """Run test suite."""
-    description = "Run test suite"
-    user_options = []
 
-    def initialize_options(self):
-        """pass."""
-        pass
+readme = open('README.rst').read()
+doclink = """
+Documentation
+-------------
 
-    def finalize_options(self):
-        """pass."""
-        pass
+The full documentation is at http://partpy.rtfd.org."""
+history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
-    def run(self):
-        """Run unittests."""
-        if os.system('py.test'):
-            sys.exit(1)
-
-
-class Style(Command):
-    """Check style with pylint."""
-    description = "Run pylint on source code."
-    user_options = []
-
-    def initialize_options(self):
-        """pass."""
-        pass
-
-    def finalize_options(self):
-        """pass."""
-        pass
-
-    def run(self):
-        """Run pylint."""
-        if not os.system('pylint --rcfile=.pylintrc ' + SOURCE + ' examples'):
-            print("Pylint reports no inconsistencies.")
-        else:
-            sys.exit(1)
-
-
-class Prep(Command):
-    """Prepare code by running style check and test suite and freezing."""
-    description = "Run test suite"
-    user_options = []
-
-    def initialize_options(self):
-        """pass."""
-        pass
-
-    def finalize_options(self):
-        """pass."""
-        pass
-
-    def run(self):
-        if os.system(PYTHON + ' setup.py test'):
-            sys.exit(1)
-        if os.system(PYTHON + ' setup.py style'):
-            sys.exit(1)
-
-
-class GitCommit(Command):
-    """Git add and commit with message."""
-    description = "Git commit."
-    user_options = [('message=', 'm', 'Git commit message.')]
-
-    def initialize_options(self):
-        """Set message to None by default."""
-        self.message = None
-
-    def finalize_options(self):
-        """pass."""
-        pass
-
-    def run(self):
-        """Run git add and commit with message if provided."""
-        if os.system('git add .'):
-            sys.exit(1)
-        if self.message is not None:
-            os.system('git commit -a -m "' + self.message + '"')
-        else:
-            os.system('git commit -a')
-
-
-class PyPiUpload(Command):
-    """Update this project at the current version to pypi."""
-    description = "Update pypi."
-    user_options = []
-
-    def initialize_options(self):
-        """pass."""
-        pass
-
-    def finalize_options(self):
-        """pass."""
-        pass
-
-    def run(self):
-        """build an sdist and then upload."""
-        if os.system(PYTHON + ' setup.py sdist upload'):
-            sys.exit(1)
-        print('PyPi Upload successful.')
-
-
-vRe = re.compile(r'__version__\s*=\s*(\S+)', re.M)
-data = open('setup.py').read()
-
-kwds = {}
-kwds['version'] = eval(vRe.search(data).group(1))
-kwds['description'] = PROJECTDESC
-kwds['long_description'] = open('README.rst').read()
-kwds['license'] = PROJECTLICENSE
-cmdclass={
-        'style': Style,
-        'test': Test,
-        'prep': Prep,
-        'commit': GitCommit,
-        'pypiup': PyPiUpload,
-        'cleanup': CleanUp}
-if cy:
-    cmdclass['build_ext'] = build_ext
 
 setup(
-    cmdclass = cmdclass,
-
-    name=PROJECTNAME,
-    author=__author__,
-    author_email=__email__,
-    url=PROJECTSITE,
-    platforms=PLATFORMS,
-    packages=[SOURCE],
-    ext_modules = EXTENSIONS,
-    requires = ['cython'],
+    name='partpy',
+    version='1.3.0',
+    description='Parser Tools in Python, a collection of tools for hand writing lexers and parsers.',
+    long_description=readme + '\n\n' + doclink + '\n\n' + history,
+    author='Taylor "Nekroze" Lawson',
+    author_email='nekroze@eturnilnetwork.com',
+    url='https://github.com/Nekroze/partpy',
+    packages=[
+        'partpy',
+    ],
+    package_dir={'partpy': 'partpy'},
+    include_package_data=True,
+    install_requires=[
+    ],
+    license='MIT',
+    zip_safe=False,
+    keywords='partpy',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 4 - beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Cython',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Compilers',
         'Topic :: Text Processing :: General'
     ],
-    **kwds
+    tests_require=['pytest>=2.3.5'],
+    cmdclass = {'cleanup': CleanUp},
 )

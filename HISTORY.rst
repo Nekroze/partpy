@@ -1,27 +1,41 @@
-Changelog
----------
+.. :changelog:
 
-V1.2.3
+History
+-------
+
+V1.3.0
+++++++
+
  - Fix for new no space guards on patern matching not passing offsets
 
 V1.2.2
+++++++
+
  - Added Impyccable to test suite for better pattern testing
  - Added no space guards to pattern matching and indenter
 
 V1.2.1
+++++++
+
  - Fixed .pxd files not being included in source distribution
 
 V1.2.0
+++++++
+
  - Added Offset arguments to most SourceString methods that should support it.
  - Adde '_' to qualified identifiers
 
 v1.1.0
+++++++
+
  - Added SourceString.eol_distance_next
  - Added SourceString.eol_distance_last
  - Added SourceString.spew_length a reverse of eat_length
  - Minor failsafes
 
 v1.0.0
+++++++
+
  - Added RPython compatability.
  - Removed some dynamic features
  - Removed SourceString.generator
@@ -30,6 +44,8 @@ v1.0.0
  - Pattern matching methods only take their respective types, no more lists.
 
 v0.3.0
+++++++
+
  - Added SourceString methods:
      - eat_line
      - count_indents_last_line
@@ -45,8 +61,12 @@ v0.3.0
  - Line numebers start at line 1
 
 v0.2.1 - February 14th 2013
++++++++++++++++++++++++++++
+
  - Added examples directory to sdist
 
 v0.2.0 - February 14th 2013
++++++++++++++++++++++++++++
+
  - Matcher merged into SourceString
  - new class SourceLine returned when dealing with specific SourceString lines

@@ -1,5 +1,5 @@
-Tutorial
---------
+Usage
+=====
 
 The main thing that you will use when working with partpy is the
 ``partpy.sourcestring.SourceString`` object. While this object can be
@@ -15,7 +15,7 @@ moving the current position, matching strings or string/function patterns,
 counting indentations and a few other useful things.
 
 Movement
-========
+--------
 
 When using a ``SourceString`` it can automattically keep track of which column
 and line you are on in the text file as well as which index in the string it is
@@ -30,6 +30,7 @@ next character.
 We can use ``SourceString.has_space()``, or to avoid function call overhead,
 ``SourceString.eos`` to start a loop that can keep going until broken or the
 entirety of the ``SourceString`` stored string has been passed.
+
 .. testcode::
 
     from partpy import SourceString
@@ -69,7 +70,7 @@ past it because all SourceString matching and retrieving methods use the
 internally tracked positions.
 
 Simple String Matching
-========================
+----------------------
 
 There are several ways to match strings, The most explicit way is to specifically
 define each posible string to match.
@@ -80,6 +81,7 @@ a list of strings and will return the string that it matches and an empty string
 if there is no match. There are the  accompanying method;
 ``SourceString.match_any_char`` are much the same as the string version but takes
 a string of one or more characters to match against rather then a list.
+
 .. testcode::
 
     from partpy import SourceString
@@ -109,12 +111,13 @@ In an easy and fast way we can match any specific string or character however
 we wish.
 
 Pattern String Matching
-=======================
+-----------------------
 
 ``SourceString`` also has mutltiple methods to help with string and pattern
 matching. For example you can match a single string or a pattern using the
 following. Just to simplify the example code ``SourceString`` will directly
 instanced.
+
 .. testcode::
 
     from partpy import SourceString
@@ -150,6 +153,7 @@ the SourceString until its function does not match anymore and return the result
 There is another method, ``SourceString.match_pattern``, which works exactly the
 same as ``SourceString.match_function`` but takes strings rather then functions,
 this means that you can re-write the previous example as.
+
 .. testcode::
 
     from partpy import SourceString
@@ -176,6 +180,7 @@ Both ``SourceString.match_function`` and ``SourceString.match_pattern`` can actu
 take two arguments. If a second argument given then the first argument is used
 only to match the first character and all following characters are matched
 using the second. This is useful for detecting 'Title' cased words for example.
+
 .. testcode::
 
     from partpy import SourceString
@@ -195,10 +200,11 @@ The two arguments may also be given as a tuple or list to the first argument
 only and will be unpacked into the first and second arguments automatically.
 
 Your Implementation
-===================
+-------------------
 
 As previously stated partpy was designed to be subclassed and used in your own
 implementations of hand written parsers and lexical analyzers.
+
 .. testcode::
 
     from partpy import SourceString
@@ -229,7 +235,7 @@ does. One can see how they can make a simple OOP class that can parse or provide
 lexical analyses using partpy in a very simple way.
 
 Exceptions
-==========
+----------
 
 Another useful thing that one should consider using is the handy ``PartpyError``
 which is an exception that can be raised with a custom message and a ``SourceString``
@@ -239,14 +245,14 @@ the previous one if available), aswell as a carrot underneath the current charac
 based on the ``SourceString`` current position. Finally it will output the custom
 message if defined.
 
-::
+.. doctest::
 
-    >>>from partpy import SourceString, PartpyError
-    >>>source = SourceString('Let's use partpy')
-    >>>source.eat_length(6)
-    >>>raise PartpyError(source, 'you broke it!')
-    Traceback (most recent call last):
-    partpy.partpyerror.PartpyError:
-    1   |Let's use partpy
-               ^
-    you broke it!
+  >>> from partpy import SourceString, PartpyError
+  >>> source = SourceString('Let's use partpy')
+  >>> source.eat_length(6)
+  >>> raise PartpyError(source, 'you broke it!')
+  Traceback (most recent call last):
+  partpy.partpyerror.PartpyError:
+  1   |Let's use partpy
+             ^
+  you broke it!

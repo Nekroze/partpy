@@ -1,6 +1,5 @@
+include AUTHORS.rst
+include CONTRIBUTING.rst
+include HISTORY.rst
+include LICENSE
 include README.rst
-include LICENSE.txt
-include partcy.py
-include examples/__init__.py
-include examples/contacts.py
-include partpy/*.pxd
